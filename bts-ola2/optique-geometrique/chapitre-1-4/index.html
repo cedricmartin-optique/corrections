@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapitre 1.4 : Taille image, correction</title>
+<style>
+:root{--b1:#2F5496;--b2:#2B6CB0;--bg:#f6f8fc;--card:#fff;--tx:#1b2330;--mu:#5b6676;--bd:#d6deeb;--hl:#eef3fb;--plus:#fff8e6;}
+@media (prefers-color-scheme:dark){:root{--b1:#8fb0ea;--b2:#7aa7e0;--bg:#121721;--card:#1b2230;--tx:#e6ebf3;--mu:#a3adbd;--bd:#33405a;--hl:#202b3d;--plus:#2d2818;}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Times New Roman",Times,serif;font-size:18px;line-height:1.5;background:var(--bg);color:var(--tx)}
+header{background:var(--b1);color:#fff;padding:18px 16px 14px}
+@media (prefers-color-scheme:dark){header{background:#22365e}}
+header .tag{font-family:Arial,sans-serif;font-size:13px;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+header h1{margin:6px 0 10px;font-size:26px}
+nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+nav a,button.all{font-family:Arial,sans-serif;font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:16px;padding:4px 12px;text-decoration:none;background:transparent;cursor:pointer}
+main{max-width:860px;margin:0 auto;padding:12px}
+.ex{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin:16px 0}
+.ex h2{color:var(--b1);text-decoration:underline;margin:0 0 8px;font-size:22px}
+.en{background:var(--hl);border-radius:8px;padding:6px 12px;margin-bottom:8px}
+.q{border-top:1px solid var(--bd);padding:8px 0}
+.qt{margin:4px 0} .qn{color:var(--b2);font-weight:bold}
+details>summary{cursor:pointer;font-family:Arial,sans-serif;font-size:14px;color:var(--b2);display:inline-block;border:1px solid var(--b2);border-radius:16px;padding:3px 12px;list-style:none;user-select:none}
+details>summary::-webkit-details-marker{display:none}
+details[open]>summary{background:var(--b2);color:#fff}
+.cbody,.simbody{padding:6px 2px 2px}
+.sub{font-weight:bold;color:var(--b2);margin:10px 0 2px}
+.concl{font-weight:bold}
+.note{font-size:15px;color:var(--mu);font-style:italic}
+.boxw{margin:8px 0}
+.box{display:inline-block;border:1.5px solid var(--tx);padding:6px 14px}
+.unit{font-style:italic;font-size:15px;color:var(--mu);margin-top:2px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px}
+.fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+.ov{text-decoration:overline}
+.arr{display:inline-block;border-bottom:1.2px solid currentColor;position:relative;padding:0 10px 0 6px;font-size:15px}
+.arr::after{content:"";position:absolute;right:-2px;bottom:-5px;border:4.5px solid transparent;border-left:8px solid currentColor}
+.rappel{border-left:4px solid var(--b2);background:var(--hl);padding:6px 10px;margin:8px 0}
+.plus{background:var(--plus);border-radius:6px;padding:6px 10px;margin:8px 0;font-size:16px}
+.fig{background:#fff;border-radius:6px;padding:6px;text-align:center;margin:6px 0}
+.sim{margin-top:10px;border-top:2px dashed var(--bd);padding-top:10px}
+.sim label{display:block;margin:8px 0;font-family:Arial,sans-serif;font-size:15px}
+.sim input[type=range]{width:100%}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.tile{flex:1 1 140px;background:var(--hl);border-radius:8px;padding:6px 10px;text-align:center}
+.tile span{display:block;font-size:15px;color:var(--mu)} .tile b{font-size:19px}
+.sunbox{height:120px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;border:1px solid var(--bd)}
+#sun{border-radius:50%;background:radial-gradient(circle,#ffd54a,#f29f05)}
+footer{text-align:center;font-size:13px;color:var(--mu);padding:20px;font-family:Arial,sans-serif}
+</style></head><body>
+<header><div class="tag">BTS OL · Optique géométrique et physique · Chapitre 1.4</div>
+<h1>Taille image : correction des exercices</h1>
+<nav><a href="#ex1">Exercice 1 : le projecteur</a><a href="#ex2">Exercice 2 : le Soleil</a><button class="all" id="all">Tout afficher</button></nav></header>
+<main>
+<p class="note">Cherche d'abord chaque question, puis ouvre la correction pour vérifier.</p>
+<section class="ex" id="ex1"><h2>Exercice n°1 : Le projecteur</h2><div class="en"><p>Un projecteur de diapositives, système épais (S) de distance focale image f' = 50 mm donne d'une diapositive représentant un arbre AB une image renversée A'B', nette, projetée sur un écran situé à 4,00 m du foyer F' de (S). La taille algébrique de AB est <span class="ov">AB</span> = −15 mm.</p>
+<p><u>Remarque :</u> on dispose la diapositive « à l'envers » dans le projecteur.</p></div><div class="q"><p class="qt"><span class="qn">1)</span> Quelle est la nature de l'objet ? de l'image ? Le système est-il convergent ou divergent (donner deux arguments) ?</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>La diapositive est un <b>objet réel</b>. L'image est reçue sur un écran : c'est une <b>image réelle</b>.</p>
+<p>(S) est <b>convergent</b> car :</p>
+<ul><li>argument 1 : f' = +50 mm &gt; 0 ;</li>
+<li>argument 2 : d'un objet réel, (S) donne une image réelle renversée.</li></ul>
+<div class="rappel"><b>Rappel :</b> chaque fois qu'un système donne d'un objet réel une image réelle renversée, ce système est convergent.</div></div></details></div><div class="q"><p class="qt"><span class="qn">2)</span> Calculer la position de l'objet, donner le grandissement transversal et la taille de l'image. <i>(Formules de Newton obligatoires)</i></p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p class="sub">Position de l'objet</p>
+<p>A' est net sur l'écran, donc <span class="ov">F'A'</span> = +4,00 m = +4 000 mm. Système dans l'air : <span class="ov">FH</span> = f' = 50 mm et <span class="ov">F'H'</span> = −f' = −50 mm.</p>
+<p>D'après Newton : <span class="ov">FA</span> × <span class="ov">F'A'</span> = <span class="ov">FH</span> × <span class="ov">F'H'</span>, et on cherche <span class="ov">FA</span>.</p>
+<div class="boxw"><div class="box"><span class="ov">FA</span> = <span class="fr"><span><span class="ov">FH</span> × <span class="ov">F'H'</span></span><span><span class="ov">F'A'</span></span></span></div><div class="unit">toutes les longueurs dans la même unité (ici en mm)</div></div>
+<p><span class="ov">FA</span> = <span class="fr"><span>50 × (−50)</span><span>4 000</span></span> = −0,625 mm ≈ −0,63 mm</p>
+<p class="concl">L'objet est situé 0,63 mm avant le foyer objet F.</p>
+<p class="sub">Grandissement transversal</p>
+<div class="boxw"><div class="box">γ<sub>y</sub> = <span class="fr"><span><span class="ov">A'B'</span></span><span><span class="ov">AB</span></span></span> = <span class="fr"><span><span class="ov">F'A'</span></span><span><span class="ov">F'H'</span></span></span> = <span class="fr"><span><span class="ov">FH</span></span><span><span class="ov">FA</span></span></span></div></div>
+<p>γ<sub>y</sub> = <span class="fr"><span>4 000</span><span>−50</span></span> = −80</p>
+<p class="sub">Taille de l'image</p>
+<div class="boxw"><div class="box"><span class="ov">A'B'</span> = γ<sub>y</sub> × <span class="ov">AB</span></div></div>
+<p><span class="ov">A'B'</span> = −80 × (−15) = +1 200 mm = 1,20 m</p>
+<p class="concl">L'image mesure 1,20 m ; γ<sub>y</sub> &lt; 0 : elle est renversée par rapport à la diapositive.</p>
+<div class="plus"><b>Pour aller plus loin :</b> comme l'image est renversée, on place la diapositive « à l'envers » dans le projecteur pour que l'arbre apparaisse à l'endroit sur l'écran. Position par rapport à H : <span class="ov">HA</span> = <span class="ov">HF</span> + <span class="ov">FA</span> = −50 − 0,625 ≈ −50,6 mm.</div></div></details></div><div class="q"><p class="qt"><span class="qn">3)</span> On place maintenant un écran à 3,00 m de H'. Calculer la position de l'objet, donner le grandissement transversal et la taille de l'image. <i>(Formules de Descartes obligatoires)</i></p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>On donne H'‑écran = 3,00 m, donc <span class="ov">H'A'</span> = +3,00 m. On cherche <span class="ov">HA</span>.</p>
+<p class="sub">Position de l'objet</p>
+<p>Descartes (système dans l'air : n = n' = 1,00) : <span class="fr"><span>1</span><span><span class="ov">H'A'</span></span></span> − <span class="fr"><span>1</span><span><span class="ov">HA</span></span></span> = <span class="fr"><span>1</span><span>f'</span></span></p>
+<div class="boxw"><div class="box"><span class="ov">HA</span> = <span class="fr"><span>1</span><span><span class="fr"><span>1</span><span><span class="ov">H'A'</span></span></span> − <span class="fr"><span>1</span><span>f'</span></span></span></span></div><div class="unit">longueurs en m</div></div>
+<p><span class="ov">HA</span> = <span class="fr"><span>1</span><span><span class="fr"><span>1</span><span>3,00</span></span> − <span class="fr"><span>1</span><span>50 × 10<sup>−3</sup></span></span></span></span> = −50,8 × 10<sup>−3</sup> m</p>
+<p class="concl"><span class="ov">HA</span> = −50,8 mm : l'objet est 50,8 mm avant H.</p>
+<p class="sub">Grandissement transversal</p>
+<div class="boxw"><div class="box">γ<sub>y</sub> = <span class="fr"><span>n × <span class="ov">H'A'</span></span><span>n' × <span class="ov">HA</span></span></span></div></div>
+<p>γ<sub>y</sub> = <span class="fr"><span>3,00</span><span>−50,8 × 10<sup>−3</sup></span></span> = −59,0</p>
+<p class="note">Calcul fait avec la valeur non arrondie de <span class="ov">HA</span> (on trouve exactement −59).</p>
+<p class="sub">Taille de l'image</p>
+<div class="boxw"><div class="box"><span class="ov">A'B'</span> = γ<sub>y</sub> × <span class="ov">AB</span></div></div>
+<p><span class="ov">A'B'</span> = −59,0 × (−15) = +885 mm = 0,885 m</p>
+<p class="concl">L'image mesure 0,885 m, renversée.</p></div></details></div><details class="sim"><summary>Afficher la simulation</summary><div class="simbody"><p>Fais varier la distance foyer image‑écran et la focale du projecteur (Newton).</p>
+<label><span class="ov">F'A'</span> (écran) : <output id="o_d">4,00</output> m<input type="range" id="r_d" min="0.5" max="8" step="0.05" value="4"></label>
+<label>f' : <output id="o_f">50</output> mm<input type="range" id="r_f" min="20" max="150" step="1" value="50"></label>
+<div class="tiles"><div class="tile"><span><span class="ov">FA</span></span><b id="t_fa"></b></div><div class="tile"><span>γ<sub>y</sub></span><b id="t_g"></b></div><div class="tile"><span><span class="ov">A'B'</span></span><b id="t_ab"></b></div></div>
+<p class="note"><span class="ov">AB</span> = −15 mm (diapositive).</p></div></details></section>
+<section class="ex" id="ex2"><h2>Exercice n°2 : Le soleil</h2><div class="en"><p>Une image du Soleil est projetée sur une feuille avec un système épais (S) de distance focale objet f = −300 mm.</p>
+<p>Le diamètre algébrique <span class="ov">A'B'</span> de l'image est de −2,8 mm.</p>
+<p><u>Remarque :</u> les points A et A' sont positionnés sur l'axe optique et le système est placé dans l'air.</p></div><div class="q"><p class="qt"><span class="qn">1)</span> Où se trouve l'objet AB ? Où se forme l'image A'B' ?</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>Données : f = −300 mm, donc f' = +300 mm (système dans l'air) ; <span class="ov">A'B'</span> = −2,8 mm.</p>
+<p>AB est le Soleil (à environ 150 × 10<sup>6</sup> km) : <b>l'objet est à l'infini</b>.</p>
+<p>A'B' se forme <b>dans le plan focal image de (S)</b> : A' est confondu avec F' et B' avec φ' (foyer secondaire image).</p>
+<div class="boxw"><div class="box">AB<sub>∞</sub> &nbsp;<span class='arr'>(S)</span>&nbsp; A'B' dans le plan focal image : A' ≡ F' ; B' ≡ φ'</div></div></div></details></div><div class="q"><p class="qt"><span class="qn">2)</span> Représenter (S), AB, A'B' et faire apparaître le diamètre apparent orienté (l'angle α) de l'objet sur un schéma (non à l'échelle).</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 290" width="100%" style="max-width:640px;height:auto" role="img" aria-label="Schéma de l'image du Soleil par le système (S)" font-family="Times New Roman, Times, serif" font-size="17">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#000"/></marker>
+<marker id="sa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#000"/></marker>
+<marker id="ahi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#000"/></marker></defs>
+<rect width="640" height="290" fill="#fff"/>
+<g stroke="#000" fill="none" stroke-width="1.4">
+<!-- axe -->
+<line x1="70" y1="150" x2="600" y2="150" marker-end="url(#ah)"/>
+<!-- plans principaux -->
+<line x1="330" y1="45" x2="330" y2="250"/>
+<line x1="395" y1="45" x2="395" y2="250"/>
+<!-- plan focal image / feuille -->
+<line x1="510" y1="40" x2="510" y2="255"/>
+<!-- foyer F -->
+<line x1="215" y1="143" x2="215" y2="157"/>
+<!-- rayon 1 (passe par H puis H') -->
+<line x1="110" y1="51" x2="330" y2="150"/>
+<line x1="395" y1="150" x2="565" y2="226.5"/>
+<!-- rayon 2 (passe par F) -->
+<line x1="90" y1="93.75" x2="330" y2="201.75"/>
+<line x1="330" y1="201.75" x2="395" y2="201.75" stroke-dasharray="5,4"/>
+<line x1="395" y1="201.75" x2="590" y2="201.75" marker-end="url(#ah)"/>
+<!-- fleches sur rayons -->
+<line x1="200" y1="91.5" x2="212" y2="96.9" marker-end="url(#sa)"/>
+<line x1="150" y1="120.75" x2="162" y2="126.15" marker-end="url(#sa)"/>
+<line x1="450" y1="174.75" x2="462" y2="180.15" marker-end="url(#sa)"/>
+<!-- image A'B' -->
+<line x1="510" y1="150" x2="510" y2="200" stroke-width="3" marker-end="url(#ahi)"/>
+<!-- angles alpha -->
+<path d="M183,150 A32,32 0 0 1 185.8,136.9" marker-end="url(#sa)"/>
+<path d="M247,150 A32,32 0 0 1 244.2,163.1" marker-end="url(#sa)"/>
+<path d="M290,150 A40,40 0 0 1 293.5,133.6" marker-end="url(#sa)"/>
+<path d="M435,150 A40,40 0 0 1 431.5,166.4" marker-end="url(#sa)"/>
+<!-- sens positif des angles -->
+<path d="M612,62 A16,16 0 1 0 590,48" marker-end="url(#sa)"/>
+</g>
+<!-- accolade B infini -->
+<path d="M100,40 C92,40 96,62 88,72 C96,82 92,104 100,104" fill="none" stroke="#000" stroke-width="1.3"/>
+<g fill="#000">
+<text x="52" y="78"><tspan font-style="italic">B</tspan><tspan font-size="13" dy="4">∞</tspan></text>
+<text x="40" y="146"><tspan font-style="italic">A</tspan><tspan font-size="13" dy="4">∞</tspan></text>
+<text x="208" y="176" font-style="italic">F</text>
+<text x="314" y="172" font-style="italic">H</text>
+<text x="400" y="172" font-style="italic">H'</text>
+<text x="516" y="142" font-style="italic">F'</text>
+<text x="518" y="174" font-style="italic">A'</text>
+<text x="516" y="224" font-style="italic">B'</text>
+<text x="344" y="38">(S)</text>
+<text x="492" y="32">Pfi</text>
+<text x="486" y="276">feuille</text>
+<text x="597" y="62" font-size="20">+</text>
+<text x="166" y="134" font-style="italic">α</text>
+<text x="250" y="178" font-style="italic">α</text>
+<text x="276" y="128" font-style="italic">α</text>
+<text x="440" y="186" font-style="italic">α</text>
+<text x="40" y="276">(A et A' sur l'axe)</text>
+</g>
+</svg>
+</div>
+<p>Le rayon passant par H ressort par H' sans changer de direction (système dans l'air) ; le rayon passant par F ressort parallèle à l'axe. Les deux se coupent en B', dans le plan focal image (la feuille).</p></div></details></div><div class="q"><p class="qt"><span class="qn">3)</span> Où se trouve l'objet AB ? Où se forme l'image A'B' ?</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>Cette question est identique à la question 1 : voir la correction de la question 1.</p></div></details></div><div class="q"><p class="qt"><span class="qn">4)</span> Calculer le diamètre apparent du Soleil.</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>Dans le triangle H'F'B' :</p>
+<div class="boxw"><div class="box">tan α = <span class="fr"><span><span class="ov">A'B'</span></span><span><span class="ov">H'F'</span></span></span> ≈ α</div><div class="unit">α en rad (angle petit)</div></div>
+<p>α = <span class="fr"><span>−2,8</span><span>300</span></span> = −9,3 × 10<sup>−3</sup> rad</p>
+<p class="concl">Le diamètre apparent du Soleil vaut 9,3 × 10<sup>−3</sup> rad (α orienté : −9,3 × 10<sup>−3</sup> rad).</p>
+<div class="plus"><b>Pour aller plus loin :</b> diamètre réel du Soleil ≈ 9,33 × 10<sup>−3</sup> × 150 × 10<sup>6</sup> ≈ 1,4 × 10<sup>6</sup> km.</div></div></details></div><div class="q"><p class="qt"><span class="qn">5)</span> Après avoir installé un filtre puissant (évitant des brûlures de la rétine), on modifie le système précédent pour le rendre afocal. Que veut dire ce mot ?</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>Un système <b>afocal</b> n'a pas de foyers (ils sont rejetés à l'infini) : sa vergence est nulle.</p>
+<div class="boxw"><div class="box">A<sub>∞</sub> &nbsp;<span class='arr'>(S) afocal</span>&nbsp; A'<sub>∞</sub></div></div>
+<p class="concl">L'image d'un objet à l'infini est à l'infini.</p></div></details></div><div class="q"><p class="qt"><span class="qn">6)</span> L'image est observée avec un diamètre apparent de 1,8 × 10<sup>−1</sup> rad. Calculer le grossissement de (S).</p>
+<details class="cor"><summary>Voir la correction</summary><div class="cbody"><div class="rappel"><b>Rappel :</b> le grossissement est le rapport des diamètres apparents de l'image et de l'objet.</div>
+<div class="boxw"><div class="box">G = <span class="fr"><span>α'</span><span>α</span></span></div><div class="unit">α et α' dans la même unité (rad)</div></div>
+<p>G = <span class="fr"><span>1,8 × 10<sup>−1</sup></span><span>−9,3 × 10<sup>−3</sup></span></span> = −19</p>
+<p class="concl">G = −19 : l'image est renversée ; le grossissement en valeur absolue vaut 19.</p></div></details></div><details class="sim"><summary>Afficher la simulation</summary><div class="simbody"><p>Le Soleil a toujours le même diamètre apparent. Fais varier la focale de (S) et observe la taille de son image sur la feuille.</p>
+<label>f' : <output id="o_f2">300</output> mm<input type="range" id="r_f2" min="50" max="2000" step="10" value="300"></label>
+<div class="tiles"><div class="tile"><span>α</span><b>−9,3 × 10<sup>−3</sup> rad</b></div><div class="tile"><span><span class="ov">A'B'</span></span><b id="t_ab2"></b></div></div>
+<div class="sunbox"><div id="sun"></div></div></div></details></section>
+</main><footer>Cédric Martin · Optique géométrique et physique</footer>
+<script>
+(function(){
+var btn=document.getElementById('all'),open=false;
+btn.addEventListener('click',function(){open=!open;document.querySelectorAll('details').forEach(function(d){d.open=open});btn.textContent=open?'Tout masquer':'Tout afficher';});
+function nf(x,d){return x.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).replace('-','−');}
+var rd=document.getElementById('r_d'),rf=document.getElementById('r_f');
+function u1(){var d=parseFloat(rd.value)*1000,f=parseFloat(rf.value);
+document.getElementById('o_d').textContent=nf(d/1000,2);document.getElementById('o_f').textContent=f;
+var fa=-f*f/d,g=d/(-f),ab=g*(-15);
+document.getElementById('t_fa').textContent=nf(fa,3)+' mm';document.getElementById('t_g').textContent=nf(g,1);
+document.getElementById('t_ab').textContent=nf(ab/1000,3)+' m';}
+rd.addEventListener('input',u1);rf.addEventListener('input',u1);u1();
+var rf2=document.getElementById('r_f2');
+function u2(){var f=parseFloat(rf2.value),a=-2.8/300,ab=f*Math.tan(a);
+document.getElementById('o_f2').textContent=f;document.getElementById('t_ab2').textContent=nf(ab,1)+' mm';
+var px=Math.max(3,Math.min(110,Math.abs(ab)*5.5));var s=document.getElementById('sun');s.style.width=px+'px';s.style.height=px+'px';}
+rf2.addEventListener('input',u2);u2();
+})();
+</script></body></html>
