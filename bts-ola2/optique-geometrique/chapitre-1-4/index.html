@@ -33,6 +33,10 @@ details[open]>summary{background:var(--b2);color:#fff}
 .fr>span:last-child{padding:0 3px}
 .ov{text-decoration:overline}
 .arr{display:inline-block;border-bottom:1.2px solid currentColor;position:relative;padding:0 10px 0 6px;font-size:15px}
+.arrb{position:absolute;left:0;right:0;top:100%;text-align:center;font-size:13px;line-height:1.3}
+.box{line-height:1.6}
+.arr.low{margin-bottom:16px}
+.arrb{margin-top:3px}
 .arr::after{content:"";position:absolute;right:-2px;bottom:-5px;border:4.5px solid transparent;border-left:8px solid currentColor}
 .rappel{border-left:4px solid var(--b2);background:var(--hl);padding:6px 10px;margin:8px 0}
 .plus{background:var(--plus);border-radius:6px;padding:6px 10px;margin:8px 0;font-size:16px}
@@ -105,55 +109,44 @@ footer{text-align:center;font-size:13px;color:var(--mu);padding:20px;font-family
 <marker id="ahi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#000"/></marker></defs>
 <rect width="640" height="290" fill="#fff"/>
 <g stroke="#000" fill="none" stroke-width="1.4">
-<!-- axe -->
 <line x1="70" y1="150" x2="600" y2="150" marker-end="url(#ah)"/>
-<!-- plans principaux -->
 <line x1="330" y1="45" x2="330" y2="250"/>
 <line x1="395" y1="45" x2="395" y2="250"/>
-<!-- plan focal image / feuille -->
 <line x1="510" y1="40" x2="510" y2="255"/>
-<!-- foyer F -->
 <line x1="215" y1="143" x2="215" y2="157"/>
-<!-- rayon 1 (passe par H puis H') -->
 <line x1="110" y1="51" x2="330" y2="150"/>
 <line x1="395" y1="150" x2="565" y2="226.5"/>
-<!-- rayon 2 (passe par F) -->
-<line x1="90" y1="93.75" x2="330" y2="201.75"/>
+<line x1="100" y1="98.25" x2="330" y2="201.75"/>
 <line x1="330" y1="201.75" x2="395" y2="201.75" stroke-dasharray="5,4"/>
 <line x1="395" y1="201.75" x2="590" y2="201.75" marker-end="url(#ah)"/>
-<!-- fleches sur rayons -->
 <line x1="200" y1="91.5" x2="212" y2="96.9" marker-end="url(#sa)"/>
-<line x1="150" y1="120.75" x2="162" y2="126.15" marker-end="url(#sa)"/>
-<line x1="450" y1="174.75" x2="462" y2="180.15" marker-end="url(#sa)"/>
-<!-- image A'B' -->
+<line x1="120" y1="107.25" x2="132" y2="112.65" marker-end="url(#sa)"/>
+<line x1="475" y1="186" x2="487" y2="191.4" marker-end="url(#sa)"/>
 <line x1="510" y1="150" x2="510" y2="200" stroke-width="3" marker-end="url(#ahi)"/>
-<!-- angles alpha -->
 <path d="M183,150 A32,32 0 0 1 185.8,136.9" marker-end="url(#sa)"/>
 <path d="M247,150 A32,32 0 0 1 244.2,163.1" marker-end="url(#sa)"/>
 <path d="M290,150 A40,40 0 0 1 293.5,133.6" marker-end="url(#sa)"/>
 <path d="M435,150 A40,40 0 0 1 431.5,166.4" marker-end="url(#sa)"/>
-<!-- sens positif des angles -->
 <path d="M612,62 A16,16 0 1 0 590,48" marker-end="url(#sa)"/>
 </g>
-<!-- accolade B infini -->
-<path d="M100,40 C92,40 96,62 88,72 C96,82 92,104 100,104" fill="none" stroke="#000" stroke-width="1.3"/>
+<path d="M94,40 C86,40 90,62 82,72 C90,82 86,104 94,104" fill="none" stroke="#000" stroke-width="1.3"/>
 <g fill="#000">
-<text x="52" y="78"><tspan font-style="italic">B</tspan><tspan font-size="13" dy="4">∞</tspan></text>
+<text x="46" y="78"><tspan font-style="italic">B</tspan><tspan font-size="13" dy="4">∞</tspan></text>
 <text x="40" y="146"><tspan font-style="italic">A</tspan><tspan font-size="13" dy="4">∞</tspan></text>
 <text x="208" y="176" font-style="italic">F</text>
-<text x="314" y="172" font-style="italic">H</text>
-<text x="400" y="172" font-style="italic">H'</text>
-<text x="516" y="142" font-style="italic">F'</text>
-<text x="518" y="174" font-style="italic">A'</text>
-<text x="516" y="224" font-style="italic">B'</text>
+<text x="312" y="178" font-style="italic">H</text>
+<text x="399" y="192" font-style="italic">H'</text>
+<text x="516" y="142" font-style="italic">A' ≡ F'</text>
+<text x="490" y="224" font-style="italic">B'</text>
 <text x="344" y="38">(S)</text>
-<text x="492" y="32">Pfi</text>
-<text x="486" y="276">feuille</text>
+<text x="498" y="32">Pfi</text>
 <text x="597" y="62" font-size="20">+</text>
-<text x="166" y="134" font-style="italic">α</text>
-<text x="250" y="178" font-style="italic">α</text>
-<text x="276" y="128" font-style="italic">α</text>
-<text x="440" y="186" font-style="italic">α</text>
+<g font-style="italic" text-anchor="middle">
+<text x="153" y="145">α</text>
+<text x="276" y="166">α</text>
+<text x="270" y="145">α</text>
+<text x="455" y="167">α</text>
+</g>
 <text x="40" y="276">(A et A' sur l'axe)</text>
 </g>
 </svg>
@@ -166,7 +159,7 @@ footer{text-align:center;font-size:13px;color:var(--mu);padding:20px;font-family
 <p class="concl">Le diamètre apparent du Soleil vaut 9,3 × 10<sup>−3</sup> rad (α orienté : −9,3 × 10<sup>−3</sup> rad).</p>
 <div class="plus"><b>Pour aller plus loin :</b> diamètre réel du Soleil ≈ 9,33 × 10<sup>−3</sup> × 150 × 10<sup>6</sup> ≈ 1,4 × 10<sup>6</sup> km.</div></div></details></div><div class="q"><p class="qt"><span class="qn">5)</span> Après avoir installé un filtre puissant (évitant des brûlures de la rétine), on modifie le système précédent pour le rendre afocal. Que veut dire ce mot ?</p>
 <details class="cor"><summary>Voir la correction</summary><div class="cbody"><p>Un système <b>afocal</b> n'a pas de foyers (ils sont rejetés à l'infini) : sa vergence est nulle.</p>
-<div class="boxw"><div class="box">A<sub>∞</sub> &nbsp;<span class='arr'>(S) afocal</span>&nbsp; A'<sub>∞</sub></div></div>
+<div class="boxw"><div class="box">A<sub>∞</sub> &nbsp;<span class='arr low'>(S)<span class='arrb'>afocal</span></span>&nbsp; A'<sub>∞</sub></div></div>
 <p class="concl">L'image d'un objet à l'infini est à l'infini.</p></div></details></div><div class="q"><p class="qt"><span class="qn">6)</span> L'image est observée avec un diamètre apparent de 1,8 × 10<sup>−1</sup> rad. Calculer le grossissement de (S).</p>
 <details class="cor"><summary>Voir la correction</summary><div class="cbody"><div class="rappel"><b>Rappel :</b> le grossissement est le rapport des diamètres apparents de l'image et de l'objet.</div>
 <div class="boxw"><div class="box">G = <span class="fr"><span>α'</span><span>α</span></span></div><div class="unit">α et α' dans la même unité (rad)</div></div>
