@@ -42,6 +42,13 @@
   .arr span.a { font-size:1.2em; }
   .step { min-height:4.6em; padding:8px 10px; background:#EEF3FB; border-radius:6px; margin-top:6px; }
   .leg { font-size:.85em; color:#333; }
+  .cons { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; margin:2px 0 8px; font-size:.95em; }
+  .cons span { font-weight:bold; }
+  .cons label { border:1px solid #2B6CB0; border-radius:16px; padding:3px 12px; cursor:pointer; color:#2B6CB0; }
+  .cons input { accent-color:#E67E00; margin:0 4px 0 0; }
+  .cons label:has(input:checked) { background:#2B6CB0; color:#fff; }
+  .consx { margin-top:8px; line-height:1.5; }
+  .consx:empty { display:none; }
   .cols { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .col { background:#fff; border:1px solid #c9d4ea; border-radius:6px; padding:8px; }
   .ct { font-family: Calibri, "Segoe UI", sans-serif; font-weight:bold; color:var(--bleu); margin-bottom:4px; }
@@ -72,6 +79,10 @@
   <button class="bsim" data-open="box1">Afficher la simulation</button>
   <div class="simbox" id="box1">
     <h3>Simulation</h3>
+    <div class="cons" role="radiogroup" aria-label="Traits de construction"><span>Traits de construction :</span>
+      <label><input type="radio" name="cons1" value="0" checked> Aucun</label>
+      <label><input type="radio" name="cons1" value="1"> A'</label>
+      <label><input type="radio" name="cons1" value="2"> A' et A''</label></div>
     <svg id="svg1" viewBox="0 0 760 300"></svg>
     <div class="leg">Hachures : faisceau utile. En rose : le DO. En vert : PE et PS (en pointillés si elles sont virtuelles).</div>
     <div class="ctrl">
@@ -80,6 +91,7 @@
       <label for="sRd">Rayon de Δ</label><input type="range" id="sRd" min="0.3" max="1.9" step="0.1" value="1"><span class="val" id="vRd"></span>
       <label for="sXa">Position de A</label><input type="range" id="sXa" min="-6" max="-2.3" step="0.1" value="-3.5"><span class="val" id="vXa"></span>
     </div>
+    <div class="consx" id="cons1x"></div>
     <div class="res" id="res1"></div>
   </div>
   <p class="q">1) Sans Δ (exemple 1), quel diaphragme est le DO ?</p>
@@ -296,6 +308,56 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     const lsPos = dc.x === x2 ? 'LS ≡ DC ≡ L<sub>2</sub>' : 'LS : ' + where(ls.x, ls.r);
     const pePos = best.x === 0 ? 'PE ≡ DO ≡ L<sub>1</sub>' : 'PE : ' + where(pe.x, pe.r) + (isFinite(pe.x) ? (pe.real ? ', réelle' : ', virtuelle') : '');
     const psPos = best.x === x2 ? 'PS ≡ DO ≡ L<sub>2</sub>' : 'PS : ' + where(ps.x, ps.r) + (isFinite(ps.x) ? (ps.real ? ', réelle' : ', virtuelle') : '');
+    // ----- traits de construction de A' (par L1) et de A'' (par L2) : méthode du foyer secondaire
+    const mode = +document.querySelector('input[name="cons1"]:checked').value;
+    let consTxt = '';
+    if (mode > 0) {
+      const B = '#1565C0', O = '#E67E00', P = '#555';
+      const segs = [[[-6.4, 0], [12.4, 0]], [[0, -R1], [0, R1]], [[x2, -R2], [x2, R2]]];
+      for (let i = 0; i + 10 <= N; i += 10) for (const sg of [1, -1]) segs.push([[pts[i][0], sg * pts[i][1]], [pts[i + 10][0], sg * pts[i + 10][1]]]);
+      for (const q of [pe, ps]) if (isFinite(q.x)) for (const sg of [1, -1]) segs.push([[q.x, sg * q.r], [q.x, sg * (q.r + 0.6)]]);
+      if (withD) for (const sg of [1, -1]) segs.push([[xd, sg * rd], [xd, sg * Math.max(rd + 0.8, 2.2)]]);
+      const seg = (a, b, o) => { line(svg, v, a, b, o); segs.push([a, b]); };
+      const dot = (x, y) => el(svg, 'circle', { cx: v.X(x), cy: v.Y(y), r: 3.2, fill: O });
+      // place un nom près de son point, à l'endroit le plus proche où aucun trait ne le coupe
+      const placeLab = (x, y, t, col) => {
+        const W = 22, H = 18, X0 = v.X(x), Y0 = v.Y(y);
+        const cut = (cx, cy) => segs.some(([a, b]) => { for (let i = 0; i <= 40; i++) { const px = v.X(a[0] + (b[0] - a[0]) * i / 40), py = v.Y(a[1] + (b[1] - a[1]) * i / 40);
+          if (Math.abs(px - cx) < W / 2 + 2 && Math.abs(py - cy) < H / 2 + 2) return true; } return false; });
+        for (const r of [20, 26, 32, 40]) for (const ang of [270, 90, 0, 180, 315, 45, 225, 135]) {
+          const cx = X0 + r * Math.cos(ang * Math.PI / 180), cy = Y0 - r * Math.sin(ang * Math.PI / 180);
+          if (!cut(cx, cy)) { el(svg, 'text', { x: cx, y: cy + 5, 'font-size': 15, fill: col, 'text-anchor': 'middle' }, t); return; } }
+      };
+      const h1 = hAt(u, 0), s0 = h1 / (0 - xa);                 // rayon bleu : de A au bord du faisceau sur L1
+      const xa1 = 1 / (1 / f1 + 1 / xa);                        // A' (réelle ici car A est avant F1)
+      seg([xa, 0], [0, h1], { c: B, w: 2 });
+      seg([-1.2, -s0 * 1.2], [f1 + 0.6, s0 * (f1 + 0.6)], { c: O, w: 1.5, d: '6 4' });   // parallèle par le centre de L1
+      seg([f1, 0.12], [f1, Math.max(s0 * f1, 0) + 0.5], { c: P, w: 1, d: '3 3' });         // plan focal image de L1
+      const xEnd1 = mode === 2 ? x2 : Math.min(xa1 + 0.8, 12.3);
+      seg([0, h1], [xEnd1, h1 * (xa1 - xEnd1) / xa1], { c: B, w: 2 });                   // rayon émergent par φ'1
+      dot(f1, s0 * f1);
+      const ar = l => `<span class="arr"><small>L<sub>${l}</sub></small><span class="a">⟶</span><small>&nbsp;</small></span>`;
+      consTxt = `<b>Construction de A'</b><br><b>Graphiquement</b> : le rayon bleu part de A et arrive sur L₁ au bord du faisceau utile. On trace le rayon parallèle à lui passant par le centre de L₁ (en orange) : il coupe le plan focal image de L₁ (pointillés, en F'₁) au foyer secondaire φ'₁. Le rayon émergent passe par φ'₁ : il coupe l'axe en A' (${fmt(xa1)} cm après L₁).<div class="chainbox"><span class="chain">A ${ar(1)} A'</span></div>`;
+      let lab2 = null;
+      if (mode === 2) {
+        const u1 = -h1 / xa1, h2 = h1 + u1 * x2;                 // rayon qui arrive sur L2
+        const yP2 = u1 * f2;                                     // foyer secondaire φ'2 dans le plan focal image de L2
+        const p = xa1 - x2, i2 = 1 / f2 + 1 / p, xa2 = Math.abs(i2) < 1e-9 ? Infinity : x2 + 1 / i2;
+        if (xa1 > x2) seg([x2, h2], [xa1, 0], { c: B, w: 1.4, d: '4 3' });                  // A' objet virtuel pour L2
+        seg([x2 - 1.0, -u1 * 1.0], [x2 + f2 + 0.6, u1 * (f2 + 0.6)], { c: O, w: 1.5, d: '6 4' });
+        seg([x2 + f2, yP2 > 0 ? 0.12 : -0.12], [x2 + f2, yP2 + (yP2 > 0 ? 0.5 : -0.5)], { c: P, w: 1, d: '3 3' });
+        const k2 = (yP2 - h2) / f2;                              // pente du rayon émergent (de I2 vers φ'2)
+        const xe = 12.3; seg([x2, h2], [xe, h2 + k2 * (xe - x2)], { c: B, w: 2 });
+        if (isFinite(xa2) && xa2 < x2) seg([x2, h2], [xa2, 0], { c: B, w: 1.4, d: '4 3' });   // image virtuelle : prolongement
+        dot(x2 + f2, yP2);
+        lab2 = [x2 + f2, yP2];
+        const where2 = !isFinite(xa2) ? 'A\'\' est à l\'infini (le rayon émergent est parallèle à l\'axe)' : `il coupe l'axe en A'' (${fmt(Math.abs(xa2 - x2))} cm ${xa2 >= x2 ? 'après' : 'avant'} L₂, image ${xa2 >= x2 ? 'réelle' : 'virtuelle : on prolonge le rayon en pointillés'})`;
+        consTxt += `<b>Construction de A''</b><br><b>Graphiquement</b> : le rayon bleu continue après A' et arrive sur L₂${xa1 > x2 ? ' (A\' est après L₂ : c\'est un objet virtuel pour L₂, prolongement en pointillés)' : ''}. On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent passe par φ'₂ : ${where2}.<div class="chainbox"><span class="chain">A' ${ar(2)} A''</span></div>`;
+      }
+      placeLab(f1, s0 * f1, "φ'<tspan font-size='11' dy='4'>1</tspan>", O);
+      if (lab2) placeLab(lab2[0], lab2[1], "φ'<tspan font-size='11' dy='4'>2</tspan>", O);
+    }
+    cons1x.innerHTML = consTxt;
     // décalage vertical minimal pour qu'aucun nom de point ne soit coupé par le bord du faisceau
     // (le nom peut rester dans la zone hachurée ; on ne le décale que si le bord du faisceau le traverse)
     const clr = x => { let lo = Infinity, hi = 0; for (let t = -0.35; t <= 0.35; t += 0.05) { const xx = x + t; if (xx >= xa && xx <= XR) { const h = Math.abs(hAt(u, xx)) * v.sc; lo = Math.min(lo, h); hi = Math.max(hi, h); } }
@@ -303,14 +365,19 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     // décalage horizontal minimal si un diaphragme ou une pupille passe sur le nom
     const bars = [pe, ps].filter(p => isFinite(p.x)).map(p => p.x).concat(withD ? [xd] : []);
     const sx = x => { let d = 0; for (const b of bars) { const e = x - b; if (Math.abs(e) < 0.42) d = (e >= 0 ? 1 : -1) * (0.42 - Math.abs(e)) * v.sc; } return d; };
-    tick(svg, v, -f1, 'F₁', false, clr(-f1), sx(-f1)); tick(svg, v, f1, "F'₁", false, clr(f1), sx(f1)); tick(svg, v, x2 - f2, 'F₂', false, clr(x2 - f2), sx(x2 - f2)); tick(svg, v, x2 + f2, "F'₂", true, clr(x2 + f2), sx(x2 + f2));
-    tick(svg, v, xa, 'A', true, clr(xa), sx(xa));
+    // deux noms voisins au-dessus de l'axe ne doivent pas se chevaucher : le second monte d'une ligne
+    const upL = [], loL = [];
+    const T = (x, lab, up) => { const L = up ? upL : loL; let off = clr(x); const dx = sx(x);
+      for (const q of L) if (Math.abs((v.X(x) + dx) - q[0]) < 26 && Math.abs(off - q[1]) < 16) off = q[1] + 17;
+      L.push([v.X(x) + dx, off]); tick(svg, v, x, lab, up, off, dx); };
+    T(-f1, 'F₁', false); T(f1, "F'₁", false); T(x2 - f2, 'F₂', false); T(x2 + f2, "F'₂", true);
+    T(xa, 'A', true);
     // images A' (par L1) et A'' (par L2), sur l'axe
     const inv1 = 1 / f1 + 1 / xa; const xA1 = Math.abs(inv1) < 1e-9 ? Infinity : 1 / inv1;
     let xA2 = Infinity;
     if (isFinite(xA1)) { const p = xA1 - x2; const inv2 = 1 / f2 + 1 / p; xA2 = Math.abs(inv2) < 1e-9 ? Infinity : x2 + 1 / inv2; }
-    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) tick(svg, v, xA1, "A'", true, clr(xA1), sx(xA1));
-    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) tick(svg, v, xA2, "A''", true, clr(xA2), sx(xA2));
+    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) T(xA1, "A'", true);
+    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) T(xA2, "A''", true);
     res1.innerHTML = `<div class="cols">
       <div class="col"><div class="ct">Pupilles</div><div>Le DO est <b>${nm(best)}</b>.</div>
         <div class="chainbox"><span class="chain">${chainFor(best, 'PE', 'PS', 'DO')}</span></div>
@@ -323,6 +390,7 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   }
   [sXd, sRd].forEach(e => e.addEventListener('input', () => { cb.checked = true; }));
   [cb, ...ids.map(i => document.getElementById(i))].forEach(e => e.addEventListener('input', draw));
+  document.querySelectorAll('input[name="cons1"]').forEach(e => e.addEventListener('change', draw));
   draw();
 })();
 
