@@ -287,6 +287,14 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     const lsPos = dc.x === x2 ? 'LS ≡ DC ≡ L<sub>2</sub>' : 'LS : ' + where(ls.x, ls.r);
     const pePos = best.x === 0 ? 'PE ≡ DO ≡ L<sub>1</sub>' : 'PE : ' + where(pe.x, pe.r) + (isFinite(pe.x) ? (pe.real ? ', réelle' : ', virtuelle') : '');
     const psPos = best.x === x2 ? 'PS ≡ DO ≡ L<sub>2</sub>' : 'PS : ' + where(ps.x, ps.r) + (isFinite(ps.x) ? (ps.real ? ', réelle' : ', virtuelle') : '');
+    tick(svg, v, -f1, 'F₁'); tick(svg, v, f1, "F'₁"); tick(svg, v, x2 - f2, 'F₂'); tick(svg, v, x2 + f2, "F'₂", true, -13);
+    tick(svg, v, xa, 'A', true);
+    // images A' (par L1) et A'' (par L2), sur l'axe
+    const inv1 = 1 / f1 + 1 / xa; const xA1 = Math.abs(inv1) < 1e-9 ? Infinity : 1 / inv1;
+    let xA2 = Infinity;
+    if (isFinite(xA1)) { const p = xA1 - x2; const inv2 = 1 / f2 + 1 / p; xA2 = Math.abs(inv2) < 1e-9 ? Infinity : x2 + 1 / inv2; }
+    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) tick(svg, v, xA1, "A'", true, -8);
+    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) tick(svg, v, xA2, "A''", true);
     res1.innerHTML = `<div class="cols">
       <div class="col"><div class="ct">Pupilles</div><div>Le DO est <b>${nm(best)}</b>.</div>
         <div class="chainbox"><span class="chain">${chainFor(best, 'PE', 'PS', 'DO')}</span></div>
