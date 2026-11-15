@@ -42,6 +42,12 @@
   .arr span.a { font-size:1.2em; }
   .step { min-height:4.6em; padding:8px 10px; background:#EEF3FB; border-radius:6px; margin-top:6px; }
   .leg { font-size:.85em; color:#333; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .col { background:#fff; border:1px solid #c9d4ea; border-radius:6px; padding:8px; }
+  .ct { font-family: Calibri, "Segoe UI", sans-serif; font-weight:bold; color:var(--bleu); margin-bottom:4px; }
+  .pos { font-size:.88em; margin-top:6px; }
+  .note { font-size:.78em; color:#555; margin-top:6px; font-style:italic; }
+  @media (max-width:560px) { .cols { grid-template-columns:1fr; } }
   .chainbox { margin-top:8px; padding:6px 10px; background:#fff; border:1px solid #c9d4ea; border-radius:6px; text-align:center; font-size:1.1em; }
   footer { text-align:center; color:#567; font-size:.8em; padding:16px; font-family: Calibri, sans-serif; }
 </style>
@@ -256,15 +262,40 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     }
     const tPE = best.x === 0 ? 'PE ≡ DO ≡ L₁' : drawP(pe, 'PE');
     const tPS = best.x === x2 ? 'PS ≡ DO ≡ L₂' : drawP(ps, 'PS');
-    tick(svg, v, -f1, 'F₁'); tick(svg, v, f1, "F'₁"); tick(svg, v, x2 - f2, 'F₂'); tick(svg, v, x2 + f2, "F'₂", true, -13);
-    tick(svg, v, xa, 'A', true);
-    // images A' (par L1) et A'' (par L2), sur l'axe
-    const inv1 = 1 / f1 + 1 / xa; const xA1 = Math.abs(inv1) < 1e-9 ? Infinity : 1 / inv1;
-    let xA2 = Infinity;
-    if (isFinite(xA1)) { const p = xA1 - x2; const inv2 = 1 / f2 + 1 / p; xA2 = Math.abs(inv2) < 1e-9 ? Infinity : x2 + 1 / inv2; }
-    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) tick(svg, v, xA1, "A'", true, -8);
-    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) tick(svg, v, xA2, "A''", true);
-    res1.innerHTML = `Le DO est <b>${best.n}</b>.<br>${tPE}<br>${tPS}`;
+    // ----- diaphragme de champ : depuis le centre de PE, la lucarne d'entrée est vue sous le plus petit angle
+    const objImg = d => { if (d.x === 0) return { x: 0, r: d.r }; const inv = 1 / d.x - 1 / f1; const x = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv; return { x, r: Math.abs(d.r * x / d.x) }; };
+    const others = diaphs.filter(d => d.n !== best.n);
+    let dc = null;
+    for (const d of others) {
+      const im = objImg(d);
+      const ang = !isFinite(pe.x) ? im.r : (!isFinite(im.x) ? 0 : im.r / Math.max(Math.abs(im.x - pe.x), 1e-6));
+      if (!dc || ang < dc.ang) dc = { ...d, ang };
+    }
+    const ar = l => `<span class="arr"><small>L<sub>${l}</sub></small><span class="a">⟶</span><small>&nbsp;</small></span>`;
+    const nm = d => d.n === 'L₁' ? 'L<sub>1</sub>' : d.n === 'L₂' ? 'L<sub>2</sub>' : 'Δ';
+    function chainFor(d, E, S, Z) {
+      if (d.x === 0) return `${E} ≡ ${Z} ≡ L<sub>1</sub> ${ar(2)} ${S}`;
+      if (d.x === x2) return `${E} ${ar(1)} ${Z} ≡ ${S} ≡ L<sub>2</sub>`;
+      return `${E} ${ar(1)} ${Z} ≡ Δ ${ar(2)} ${S}`;
+    }
+    const where = (x, r) => !isFinite(x) ? 'à l\'infini' : `${fmt(Math.abs(x))} cm ${x >= 0 ? 'après' : 'avant'} L<sub>1</sub>, rayon ${fmt(r)} cm`;
+    const le = objImg(dc);
+    let ls;
+    if (dc.x === x2) ls = { x: x2, r: R2 };
+    else { const p = dc.x - x2; const inv = 1 / f2 + 1 / p; const x = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv; ls = { x: x2 + x, r: Math.abs(dc.r * x / p) }; }
+    const lePos = dc.x === 0 ? 'LE ≡ DC ≡ L<sub>1</sub>' : 'LE : ' + where(le.x, le.r);
+    const lsPos = dc.x === x2 ? 'LS ≡ DC ≡ L<sub>2</sub>' : 'LS : ' + where(ls.x, ls.r);
+    const pePos = best.x === 0 ? 'PE ≡ DO ≡ L<sub>1</sub>' : 'PE : ' + where(pe.x, pe.r) + (isFinite(pe.x) ? (pe.real ? ', réelle' : ', virtuelle') : '');
+    const psPos = best.x === x2 ? 'PS ≡ DO ≡ L<sub>2</sub>' : 'PS : ' + where(ps.x, ps.r) + (isFinite(ps.x) ? (ps.real ? ', réelle' : ', virtuelle') : '');
+    res1.innerHTML = `<div class="cols">
+      <div class="col"><div class="ct">Pupilles</div><div>Le DO est <b>${nm(best)}</b>.</div>
+        <div class="chainbox"><span class="chain">${chainFor(best, 'PE', 'PS', 'DO')}</span></div>
+        <div class="pos">${pePos}<br>${psPos}</div></div>
+      <div class="col"><div class="ct">Lucarnes</div><div>Le DC est <b>${nm(dc)}</b>.</div>
+        <div class="chainbox"><span class="chain">${chainFor(dc, 'LE', 'LS', 'DC')}</span></div>
+        <div class="pos">${lePos}<br>${lsPos}</div>
+        ${withD ? '<div class="note">3 diaphragmes : DC trouvé depuis le centre de PE (lucarne vue sous le plus petit angle), limite du programme.</div>' : '<div class="note">2 diaphragmes : si l\'un est le DO, l\'autre est le DC.</div>'}</div>
+    </div>`;
   }
   [sXd, sRd].forEach(e => e.addEventListener('input', () => { cb.checked = true; }));
   [cb, ...ids.map(i => document.getElementById(i))].forEach(e => e.addEventListener('input', draw));
