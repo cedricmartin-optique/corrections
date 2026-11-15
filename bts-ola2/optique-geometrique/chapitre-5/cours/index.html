@@ -42,6 +42,7 @@
   .arr span.a { font-size:1.2em; }
   .step { min-height:4.6em; padding:8px 10px; background:#EEF3FB; border-radius:6px; margin-top:6px; }
   .leg { font-size:.85em; color:#333; }
+  .chainbox { margin-top:8px; padding:6px 10px; background:#fff; border:1px solid #c9d4ea; border-radius:6px; text-align:center; font-size:1.1em; }
   footer { text-align:center; color:#567; font-size:.8em; padding:16px; font-family: Calibri, sans-serif; }
 </style>
 </head>
@@ -275,15 +276,24 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   const svg = document.getElementById('svg2');
   const v = view(-5, 12, 165, 44);
   const xa = -3.5, xA1 = 14 / 3, x2 = 6, xA2 = 10, h1 = xA1 / (xA1 - 1);
+  const ar = l => `<span class="arr"><small>L<sub>${l}</sub></small><span class="a">⟶</span><small>&nbsp;</small></span>`;
   const steps = [
-    'L\'exemple 2 : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
-    'Étape 1 : on construit A\', l\'image de A par L₁ (calcul : A\' est à 4,67 cm après L₁). C\'est l\'image intermédiaire.',
-    'Étape 2 : depuis A\', on regarde les bords des trois diaphragmes. Δ est vu sous le plus petit angle : <b>Δ est le DO</b>.',
-    'Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
-    'Étape 4 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit jusqu\'à A\'\' après L₂.',
-    'Étape 5 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
-    'Étape 6 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
-    'Bilan : PE <span class="arr"><small>L₁</small><span class="a">⟶</span><small>&nbsp;</small></span> DO ≡ Δ <span class="arr"><small>L₂</small><span class="a">⟶</span><small>&nbsp;</small></span> PS. Les rayons du faisceau utile qui entrent visent les bords de PE.'
+    ['Le montage de l\'exemple 2 : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
+     `A ${ar(1)} A' ${ar(2)} A''`],
+    ['Étape 1 : on construit A\', l\'image de A par L₁ (calcul : A\' est à 4,67 cm après L₁). C\'est l\'image intermédiaire.',
+     `A ${ar(1)} A'`],
+    ['Étape 2 : depuis A\', on regarde les bords des trois diaphragmes. Δ est vu sous le plus petit angle : <b>Δ est le DO</b>, c\'est aussi la pupille intermédiaire.',
+     `DO ≡ Δ ≡ PI`],
+    ['Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
+     `A ${ar(1)} A'`],
+    ['Étape 4 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit jusqu\'à A\'\' après L₂.',
+     `A ${ar(1)} A' ${ar(2)} A''`],
+    ['Étape 5 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
+     `PE ${ar(1)} DO ≡ Δ`],
+    ['Étape 6 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
+     `DO ≡ Δ ${ar(2)} PS`],
+    ['Bilan : la chaîne des pupilles de l\'exemple 2. Les rayons du faisceau utile qui entrent visent les bords de PE.',
+     `PE ${ar(1)} DO ≡ Δ ${ar(2)} PS`]
   ];
   let k = 0;
   function draw() {
@@ -315,7 +325,7 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     tick(svg, v, -2, 'F₁'); tick(svg, v, 2, "F'₁"); tick(svg, v, 5, 'F₂'); tick(svg, v, 7, "F'₂", true, 26); tick(svg, v, xa, 'A', true);
     if (k >= 1) tick(svg, v, xA1, "A'", true, -8);
     if (k >= 4) tick(svg, v, xA2, "A''", true);
-    step2.innerHTML = steps[k];
+    step2.innerHTML = steps[k][0] + `<div class="chainbox"><span class="chain">${steps[k][1]}</span></div>`;
     prev2.disabled = k === 0; next2.disabled = k === steps.length - 1;
   }
   prev2.onclick = () => { k--; draw(); }; next2.onclick = () => { k++; draw(); };
