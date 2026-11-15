@@ -50,6 +50,8 @@
   @media (max-width:560px) { .cols { grid-template-columns:1fr; } }
   .chainbox { margin-top:8px; padding:6px 10px; background:#fff; border:1px solid #c9d4ea; border-radius:6px; text-align:center; font-size:1.1em; }
   footer { text-align:center; color:#567; font-size:.8em; padding:16px; font-family: Calibri, sans-serif; }
+.frac>span:last-child .ov{margin-top:4px}
+.ov{display:inline-block;border-top:1px solid currentColor;line-height:1.15;padding-top:1px}
 </style>
 </head>
 <body>
@@ -319,21 +321,21 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   const steps = [
     ['Le montage de l\'exemple 2 : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
      `A ${ar(1)} A' ${ar(2)} A''`],
-    ['Étape 1 : on construit A\', l\'image de A par L₁ (calcul : A\' est à 4,67 cm après L₁). C\'est l\'image intermédiaire.',
+    [`<u>Étape 1</u> : on construit A', l'image de A par L₁. C'est l'image intermédiaire.<br><b>Par calcul</b> : relation de conjugaison, <span class="ov">OA'</span> = <span class="frac"><span><span class="ov">OA</span> × f'<sub>1</sub></span><span><span class="ov">OA</span> + f'<sub>1</sub></span></span> = <span class="frac"><span>−3,5 × 2</span><span>−3,5 + 2</span></span>, donc <span style="white-space:nowrap"><span class="ov">OA'</span> = 4,67 cm</span> : A' est à 4,67 cm après L₁.`,
      `A ${ar(1)} A'`],
-    ['Étape 2 : depuis A\', on regarde les bords des trois diaphragmes. Δ est vu sous le plus petit angle : <b>Δ est le DO</b>, c\'est aussi la pupille intermédiaire.',
+    [`<u>Étape 2</u> : on cherche le DO.<br><b>Graphiquement</b> : depuis A', on trace les droites qui joignent A' au bord de chaque diaphragme (L₁, Δ et L₂). Le bord vu sous le plus petit angle par rapport à l'axe est celui de Δ (droite rose) : <b>Δ est le DO</b>, c'est aussi la pupille intermédiaire.`,
      `DO ≡ Δ ≡ PI`],
-    ['Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
+    [`<u>Étape 3</u> : on trace le faisceau utile intermédiaire.<br><b>Graphiquement</b> : on part de A' et on trace les deux rayons qui s'appuient sur les bords de Δ ; on les prolonge jusqu'à L₁.`,
      `A ${ar(1)} A'`],
-    [`Étape 4 : on construit A'', l'image de A' par L₂. <b>Graphiquement</b> : on prolonge un rayon du faisceau intermédiaire après A' jusqu'à L₂ (point I, en bleu). On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent part de I et passe par φ'₂ : il coupe l'axe en A''. <b>Par le calcul</b> : <span style="white-space:nowrap"><span style="text-decoration:overline">F<sub>2</sub>A'</span> = −0,33 cm</span>. Relation de Newton : <span style="text-decoration:overline">F'<sub>2</sub>A''</span> = <span class="frac"><span>f<sub>2</sub> × f'<sub>2</sub></span><span><span style="text-decoration:overline">F<sub>2</sub>A'</span></span></span> = <span class="frac"><span>−1 × 1</span><span>−0,33</span></span> = 3 cm. A'' est donc à 4 cm après L₂ (image réelle), comme sur le tracé.`,
+    [`<u>Étape 4</u> : on construit A'', l'image de A' par L₂.<br><b>Graphiquement</b> : on prolonge un rayon du faisceau intermédiaire après A' jusqu'à L₂ (point I, en bleu). On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent part de I et passe par φ'₂ : il coupe l'axe en A''.<br><b>Par calcul</b> : <span style="white-space:nowrap"><span class="ov">F<sub>2</sub>A'</span> = −0,33 cm</span>. Relation de Newton : <span class="ov">F'<sub>2</sub>A''</span> = <span class="frac"><span>f<sub>2</sub> × f'<sub>2</sub></span><span><span class="ov">F<sub>2</sub>A'</span></span></span> = <span class="frac"><span>−1 × 1</span><span>−0,33</span></span> = 3 cm. A'' est donc à 4 cm après L₂ (image réelle), comme sur le tracé.`,
      `A' ${ar(2)} A''`],
-    ['Étape 5 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit le faisceau à travers L₂ jusqu\'à A\'\'.',
+    [`<u>Étape 5</u> : on complète le faisceau utile.<br><b>Graphiquement</b> : on relie A aux deux points où le faisceau intermédiaire coupe L₁, puis on poursuit les deux rayons après A' jusqu'à L₂, et après L₂ jusqu'à A''.`,
      `A ${ar(1)} A' ${ar(2)} A''`],
-    ['Étape 6 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
+    [`<u>Étape 6</u> : on construit PE, l'image de Δ par L₁ (retour inverse de la lumière).<br><b>Graphiquement</b> : on trace le rayon qui arrive au bord de Δ parallèlement à l'axe : avant L₁, il passait par F₁. On trace aussi le rayon passant par le bord de Δ et le centre de L₁. Leurs prolongements (en pointillés) se coupent en PE : virtuelle, 2 cm après L₁, rayon 2 cm.`,
      `PE ${ar(1)} DO ≡ Δ`],
-    ['Étape 7 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
+    [`<u>Étape 7</u> : on construit PS, l'image de Δ par L₂.<br><b>Graphiquement</b> : depuis le bord de Δ, on trace le rayon parallèle à l'axe, qui ressort de L₂ par F'₂, et le rayon passant par le centre de L₂. Ils se coupent en PS : réelle, 1,25 cm après L₂, rayon 0,25 cm.`,
      `DO ≡ Δ ${ar(2)} PS`],
-    ['Bilan : la chaîne des pupilles de l\'exemple 2. Les rayons du faisceau utile qui entrent visent les bords de PE.',
+    [`<u>Bilan</u> : la chaîne des pupilles de l'exemple 2. Les rayons du faisceau utile qui entrent visent les bords de PE.`,
      `PE ${ar(1)} DO ≡ Δ ${ar(2)} PS`]
   ];
   let k = 0;
