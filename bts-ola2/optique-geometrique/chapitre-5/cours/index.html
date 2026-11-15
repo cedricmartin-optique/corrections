@@ -82,7 +82,7 @@
     <div class="cons" role="radiogroup" aria-label="Traits de construction"><span>Traits de construction :</span>
       <label><input type="radio" name="cons1" value="0" checked> Aucun</label>
       <label><input type="radio" name="cons1" value="1"> A'</label>
-      <label><input type="radio" name="cons1" value="2"> A' et A''</label></div>
+      <label><input type="radio" name="cons1" value="2"> A''</label></div>
     <svg id="svg1" viewBox="0 0 760 300"></svg>
     <div class="leg">Hachures : faisceau utile. En rose : le DO. En vert : PE et PS (en pointillés si elles sont virtuelles).</div>
     <div class="ctrl">
@@ -330,20 +330,24 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
       };
       const h1 = hAt(u, 0), s0 = h1 / (0 - xa);                 // rayon bleu : de A au bord du faisceau sur L1
       const xa1 = 1 / (1 / f1 + 1 / xa);                        // A' (réelle ici car A est avant F1)
+      const ar = l => `<span class="arr"><small>L<sub>${l}</sub></small><span class="a">⟶</span><small>&nbsp;</small></span>`;
+      if (mode === 1) {   // construction de A' seule
       seg([xa, 0], [0, h1], { c: B, w: 2 });
       seg([-1.2, -s0 * 1.2], [f1 + 0.6, s0 * (f1 + 0.6)], { c: O, w: 1.5, d: '6 4' });   // parallèle par le centre de L1
       seg([f1, 0.12], [f1, Math.max(s0 * f1, 0) + 0.5], { c: P, w: 1, d: '3 3' });         // plan focal image de L1
-      const xEnd1 = mode === 2 ? x2 : Math.min(xa1 + 0.8, 12.3);
+      const xEnd1 = Math.min(xa1 + 0.8, 12.3);
       seg([0, h1], [xEnd1, h1 * (xa1 - xEnd1) / xa1], { c: B, w: 2 });                   // rayon émergent par φ'1
       dot(f1, s0 * f1);
-      const ar = l => `<span class="arr"><small>L<sub>${l}</sub></small><span class="a">⟶</span><small>&nbsp;</small></span>`;
       consTxt = `<b>Construction de A'</b><br><b>Graphiquement</b> : le rayon bleu part de A et arrive sur L₁ au bord du faisceau utile. On trace le rayon parallèle à lui passant par le centre de L₁ (en orange) : il coupe le plan focal image de L₁ (pointillés, en F'₁) au foyer secondaire φ'₁. Le rayon émergent passe par φ'₁ : il coupe l'axe en A' (${fmt(xa1)} cm après L₁).<div class="chainbox"><span class="chain">A ${ar(1)} A'</span></div>`;
+      }
       let lab2 = null;
       if (mode === 2) {
         const u1 = -h1 / xa1, h2 = h1 + u1 * x2;                 // rayon qui arrive sur L2
         const yP2 = u1 * f2;                                     // foyer secondaire φ'2 dans le plan focal image de L2
         const p = xa1 - x2, i2 = 1 / f2 + 1 / p, xa2 = Math.abs(i2) < 1e-9 ? Infinity : x2 + 1 / i2;
-        if (xa1 > x2) seg([x2, h2], [xa1, 0], { c: B, w: 1.4, d: '4 3' });                  // A' objet virtuel pour L2
+        // construction de A'' seule : le rayon bleu vient de A' (objet pour L2)
+        if (xa1 < x2) seg([xa1, 0], [x2, h2], { c: B, w: 2 });
+        else { seg([0, h1], [x2, h2], { c: B, w: 2 }); seg([x2, h2], [xa1, 0], { c: B, w: 1.4, d: '4 3' }); }   // A' objet virtuel pour L2
         seg([x2 - 1.0, -u1 * 1.0], [x2 + f2 + 0.6, u1 * (f2 + 0.6)], { c: O, w: 1.5, d: '6 4' });
         seg([x2 + f2, yP2 > 0 ? 0.12 : -0.12], [x2 + f2, yP2 + (yP2 > 0 ? 0.5 : -0.5)], { c: P, w: 1, d: '3 3' });
         const k2 = (yP2 - h2) / f2;                              // pente du rayon émergent (de I2 vers φ'2)
@@ -352,9 +356,9 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
         dot(x2 + f2, yP2);
         lab2 = [x2 + f2, yP2];
         const where2 = !isFinite(xa2) ? 'A\'\' est à l\'infini (le rayon émergent est parallèle à l\'axe)' : `il coupe l'axe en A'' (${fmt(Math.abs(xa2 - x2))} cm ${xa2 >= x2 ? 'après' : 'avant'} L₂, image ${xa2 >= x2 ? 'réelle' : 'virtuelle : on prolonge le rayon en pointillés'})`;
-        consTxt += `<b>Construction de A''</b><br><b>Graphiquement</b> : le rayon bleu continue après A' et arrive sur L₂${xa1 > x2 ? ' (A\' est après L₂ : c\'est un objet virtuel pour L₂, prolongement en pointillés)' : ''}. On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent passe par φ'₂ : ${where2}.<div class="chainbox"><span class="chain">A' ${ar(2)} A''</span></div>`;
+        consTxt = `<b>Construction de A''</b><br><b>Graphiquement</b> : on part de A', image de A par L₁, qui sert d'objet pour L₂. ${xa1 > x2 ? 'A\' est après L₂ : c\'est un objet virtuel pour L₂, le rayon bleu se dirige vers A\' (prolongement en pointillés) et arrive sur L₂ avant.' : 'Le rayon bleu issu de A\' arrive sur L₂.'} On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent passe par φ'₂ : ${where2}.<div class="chainbox"><span class="chain">A' ${ar(2)} A''</span></div>`;
       }
-      placeLab(f1, s0 * f1, "φ'<tspan font-size='11' dy='4'>1</tspan>", O);
+      if (mode === 1) placeLab(f1, s0 * f1, "φ'<tspan font-size='11' dy='4'>1</tspan>", O);
       if (lab2) placeLab(lab2[0], lab2[1], "φ'<tspan font-size='11' dy='4'>2</tspan>", O);
     }
     cons1x.innerHTML = consTxt;
