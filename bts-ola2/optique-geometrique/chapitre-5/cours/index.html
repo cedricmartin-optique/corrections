@@ -192,17 +192,19 @@ function line(svg, v, a, b, o = {}) {
   return el(svg, 'line', { x1: v.X(a[0]), y1: v.Y(a[1]), x2: v.X(b[0]), y2: v.Y(b[1]),
     stroke: o.c || '#000', 'stroke-width': o.w || 1.4, 'stroke-dasharray': o.d || '', ...(o.extra || {}) });
 }
-function lens(svg, v, x, R, name, below) {
+// nom de lentille : toujours centré au-dessus de la lentille (dy : léger décalage vers le haut si un trait passe)
+function lens(svg, v, x, R, name, dy = 0) {
   el(svg, 'line', { x1: v.X(x), y1: v.Y(-R), x2: v.X(x), y2: v.Y(R), stroke: '#000', 'stroke-width': 2,
     'marker-start': `url(#a${svg.id})`, 'marker-end': `url(#a${svg.id})` });
-  el(svg, 'text', { x: v.X(x) + 6, y: below ? v.Y(-R) + 18 : v.Y(R) - 6, 'font-size': 16 }, name);
+  el(svg, 'text', { x: v.X(x), y: v.Y(R) - 9 - dy, 'font-size': 16, 'text-anchor': 'middle' }, name);
 }
 function diaph(svg, v, x, r, outer, c = '#000', dash = '') {
   for (const s of [1, -1]) line(svg, v, [x, s * r], [x, s * outer], { c, w: 4, d: dash });
 }
-function tick(svg, v, x, label, up, dx = 0) {
+// nom de point : centré au-dessus (up) ou en dessous du point ; off (px) l'éloigne de l'axe si un trait passe
+function tick(svg, v, x, label, up, off = 0, dx = 0) {
   line(svg, v, [x, -0.1], [x, 0.1], { w: 1.2 });
-  if (label) el(svg, 'text', { x: v.X(x) + dx, y: up ? v.Y(0) - 9 : v.Y(0) + 19, 'font-size': 15, 'text-anchor': 'middle' }, label);
+  if (label) el(svg, 'text', { x: v.X(x) + dx, y: up ? v.Y(0) - 9 - off : v.Y(0) + 19 + off, 'font-size': 15, 'text-anchor': 'middle' }, label);
 }
 const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
 
@@ -246,8 +248,9 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     el(svg, 'polyline', { points: pts.map(p => `${v.X(p[0])},${v.Y(-p[1])}`).join(' '), fill: 'none', stroke: '#000', 'stroke-width': 1.5 });
     // axe, lentilles, foyers
     line(svg, v, [-6.4, 0], [12.4, 0], { w: 1 });
-    lens(svg, v, 0, R1, 'L₁'); lens(svg, v, x2, R2, 'L₂');
-    if (withD) { diaph(svg, v, xd, rd, Math.max(rd + 0.8, 2.2)); el(svg, 'text', { x: v.X(xd) + 7, y: v.Y(rd + 0.6), 'font-size': 16 }, 'Δ'); }
+    const up = 0.35 * v.sc + 3; // le nom passe au-dessus du DO rose quand la lentille est le DO
+    lens(svg, v, 0, R1, 'L₁', best.x === 0 ? up : 0); lens(svg, v, x2, R2, 'L₂', best.x === x2 ? up : 0);
+    if (withD) { diaph(svg, v, xd, rd, Math.max(rd + 0.8, 2.2)); el(svg, 'text', { x: v.X(xd), y: v.Y(Math.max(rd + 0.8, 2.2)) - 8 - (Math.abs(xd) < 0.6 ? 18 : 0), 'font-size': 16, 'text-anchor': 'middle' }, 'Δ'); }
     // DO en rose
     diaph(svg, v, best.x, best.r, best.r + 0.35, '#C2185B');
     // PE : image du DO par la partie avant (L1 si DO après L1)
@@ -259,7 +262,11 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     function drawP(p, name) {
       if (!isFinite(p.x) || p.x < -6.3 || p.x > 12.3) return name + ' à l\'infini ou hors du schéma';
       if (!(p.x === best.x)) diaph(svg, v, p.x, p.r, p.r + 0.6, '#1B7F3B', p.real ? '' : '5 4');
-      el(svg, 'text', { x: v.X(p.x) + 6, y: v.Y(-(p.r + 0.6)) + 18, 'font-size': 15, fill: '#1B7F3B' }, name);
+      const top = (p.x === best.x ? best.r + 0.35 : p.r + 0.6);
+      let ly = v.Y(top) - 8;
+      for (const L of [[0, R1], [x2, R2]].concat(withD ? [[xd, Math.max(rd + 0.8, 2.2)]] : []))
+        if (Math.abs(p.x - L[0]) < 0.7 && Math.abs(ly - (v.Y(L[1]) - 9)) < 18) ly = Math.min(ly, v.Y(L[1]) - 9) - 18;
+      el(svg, 'text', { x: v.X(p.x), y: ly, 'font-size': 15, fill: '#1B7F3B', 'text-anchor': 'middle' }, name);
       return `${name} : ${fmt(p.x)} cm après L₁ (rayon ${fmt(p.r)} cm), ${p.real ? 'réelle' : 'virtuelle'}`;
     }
     const tPE = best.x === 0 ? 'PE ≡ DO ≡ L₁' : drawP(pe, 'PE');
@@ -289,14 +296,21 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     const lsPos = dc.x === x2 ? 'LS ≡ DC ≡ L<sub>2</sub>' : 'LS : ' + where(ls.x, ls.r);
     const pePos = best.x === 0 ? 'PE ≡ DO ≡ L<sub>1</sub>' : 'PE : ' + where(pe.x, pe.r) + (isFinite(pe.x) ? (pe.real ? ', réelle' : ', virtuelle') : '');
     const psPos = best.x === x2 ? 'PS ≡ DO ≡ L<sub>2</sub>' : 'PS : ' + where(ps.x, ps.r) + (isFinite(ps.x) ? (ps.real ? ', réelle' : ', virtuelle') : '');
-    tick(svg, v, -f1, 'F₁'); tick(svg, v, f1, "F'₁"); tick(svg, v, x2 - f2, 'F₂'); tick(svg, v, x2 + f2, "F'₂", true, -13);
-    tick(svg, v, xa, 'A', true);
+    // décalage vertical minimal pour qu'aucun nom de point ne soit coupé par le bord du faisceau
+    // (le nom peut rester dans la zone hachurée ; on ne le décale que si le bord du faisceau le traverse)
+    const clr = x => { let lo = Infinity, hi = 0; for (let t = -0.35; t <= 0.35; t += 0.05) { const xx = x + t; if (xx >= xa && xx <= XR) { const h = Math.abs(hAt(u, xx)) * v.sc; lo = Math.min(lo, h); hi = Math.max(hi, h); } }
+      if (hi < 5 || lo > 23) return 0; return Math.max(0, hi - 4); };
+    // décalage horizontal minimal si un diaphragme ou une pupille passe sur le nom
+    const bars = [pe, ps].filter(p => isFinite(p.x)).map(p => p.x).concat(withD ? [xd] : []);
+    const sx = x => { let d = 0; for (const b of bars) { const e = x - b; if (Math.abs(e) < 0.42) d = (e >= 0 ? 1 : -1) * (0.42 - Math.abs(e)) * v.sc; } return d; };
+    tick(svg, v, -f1, 'F₁', false, clr(-f1), sx(-f1)); tick(svg, v, f1, "F'₁", false, clr(f1), sx(f1)); tick(svg, v, x2 - f2, 'F₂', false, clr(x2 - f2), sx(x2 - f2)); tick(svg, v, x2 + f2, "F'₂", true, clr(x2 + f2), sx(x2 + f2));
+    tick(svg, v, xa, 'A', true, clr(xa), sx(xa));
     // images A' (par L1) et A'' (par L2), sur l'axe
     const inv1 = 1 / f1 + 1 / xa; const xA1 = Math.abs(inv1) < 1e-9 ? Infinity : 1 / inv1;
     let xA2 = Infinity;
     if (isFinite(xA1)) { const p = xA1 - x2; const inv2 = 1 / f2 + 1 / p; xA2 = Math.abs(inv2) < 1e-9 ? Infinity : x2 + 1 / inv2; }
-    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) tick(svg, v, xA1, "A'", true, -8);
-    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) tick(svg, v, xA2, "A''", true);
+    if (isFinite(xA1) && xA1 > -6.3 && xA1 < 12.3) tick(svg, v, xA1, "A'", true, clr(xA1), sx(xA1));
+    if (isFinite(xA2) && xA2 > -6.3 && xA2 < 12.3) tick(svg, v, xA2, "A''", true, clr(xA2), sx(xA2));
     res1.innerHTML = `<div class="cols">
       <div class="col"><div class="ct">Pupilles</div><div>Le DO est <b>${nm(best)}</b>.</div>
         <div class="chainbox"><span class="chain">${chainFor(best, 'PE', 'PS', 'DO')}</span></div>
@@ -351,32 +365,34 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
       for (const s of [1, -1]) { line(svg, v, [0, s * h1], [xA1, 0], { w: 1.5 }); }
     }
     line(svg, v, [-4.8, 0], [11.8, 0], { w: 1 });
-    lens(svg, v, 0, 2, 'L₁', true); lens(svg, v, x2, 1.5, 'L₂', true);
-    diaph(svg, v, 1, 1, 1.9); el(svg, 'text', { x: v.X(1), y: v.Y(2.15), 'font-size': 16, 'text-anchor': 'middle' }, 'Δ');
+    lens(svg, v, 0, 2, 'L₁'); lens(svg, v, x2, 1.5, 'L₂');
+    diaph(svg, v, 1, 1, 1.9); el(svg, 'text', { x: v.X(1), y: v.Y(1.9) - 8, 'font-size': 16, 'text-anchor': 'middle' }, 'Δ');
     if (k === 2) {
       for (const [x, r, c] of [[0, 2, '#999'], [1, 1, '#C2185B'], [x2, 1.5, '#999']]) line(svg, v, [xA1, 0], [x, r], { c, w: 1.4, d: c === '#999' ? '5 4' : '' });
     }
     if (k >= 2) diaph(svg, v, 1, 1, 1.35, '#C2185B');
     if (k >= 6) {
       line(svg, v, [0, 1], [1, 1], { c: G }); line(svg, v, [-2, 0], [2, 2], { c: G, d: '6 4' }); line(svg, v, [0, 0], [2, 2], { c: G, d: '6 4' });
-      diaph(svg, v, 2, 2, 2.5, G, '5 4'); el(svg, 'text', { x: v.X(2) + 7, y: v.Y(2.55), 'font-size': 16, fill: G }, 'PE');
+      diaph(svg, v, 2, 2, 2.5, G, '5 4'); el(svg, 'text', { x: v.X(2), y: v.Y(2.5) - 8, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PE');
     }
     if (k >= 7) {
       line(svg, v, [1, 1], [x2, 1], { c: G }); line(svg, v, [x2, 1], [7.7, -0.7], { c: G }); line(svg, v, [1, 1], [7.7, -0.34], { c: G });
-      diaph(svg, v, 7.25, 0, 0.25, G); el(svg, 'text', { x: v.X(6.75), y: v.Y(-0.75) + 10, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PS');
+      diaph(svg, v, 7.25, 0, 0.25, G); el(svg, 'text', { x: v.X(7.25), y: v.Y(0) - 20, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PS');
     }
     if (k === 4) {
       const B = '#1565C0', O = '#E67E00', yI = h1 * (xA1 - x2) / xA1, sl = -h1 / xA1, yP = sl * (7 - x2);
-      line(svg, v, [7, -1.25], [7, 1.25], { c: '#555', w: 1, d: '3 3' });
+      line(svg, v, [7, -1.25], [7, 0], { c: '#555', w: 1, d: '3 3' }); line(svg, v, [7, 0.78], [7, 1.25], { c: '#555', w: 1, d: '3 3' });
       line(svg, v, [xA1, 0], [x2, yI], { c: B, w: 1.8 });
       line(svg, v, [x2 - 0.9, -sl * 0.9], [7.6, sl * 1.6], { c: O, w: 1.5, d: '6 4' });
       line(svg, v, [x2, yI], [xA2 + 1.2, -yI / 4 * 1.2], { c: B, w: 1.8 });
       el(svg, 'circle', { cx: v.X(7), cy: v.Y(yP), r: 3.2, fill: O });
-      el(svg, 'text', { x: v.X(7) + 7, y: v.Y(yP) + 20, 'font-size': 15, fill: O }, "φ'<tspan font-size='11' dy='4'>2</tspan>");
+      el(svg, 'text', { x: v.X(7) + 15, y: v.Y(yP) + 24, 'font-size': 15, fill: O, 'text-anchor': 'middle' }, "φ'<tspan font-size='11' dy='4'>2</tspan>");
       el(svg, 'text', { x: v.X(x2) - 12, y: v.Y(yI) + 18, 'font-size': 15, fill: B, 'text-anchor': 'middle' }, 'I');
     }
-    tick(svg, v, -2, 'F₁'); tick(svg, v, 2, "F'₁"); tick(svg, v, 5, 'F₂'); tick(svg, v, 7, "F'₂", true, 26); tick(svg, v, xa, 'A', true);
-    if (k >= 1) tick(svg, v, xA1, "A'", true, -8);
+    tick(svg, v, -2, 'F₁'); tick(svg, v, 2, "F'₁"); tick(svg, v, 5, 'F₂');
+    if (k >= 7) tick(svg, v, 7, "F'₂", false, 12, -5); else tick(svg, v, 7, "F'₂", true, 9);
+    tick(svg, v, xa, 'A', true);
+    if (k >= 1) tick(svg, v, xA1, "A'", true);
     if (k >= 4) tick(svg, v, xA2, "A''", true);
     step2.innerHTML = steps[k][0] + `<div class="chainbox"><span class="chain">${steps[k][1]}</span></div>`;
     prev2.disabled = k === 0; next2.disabled = k === steps.length - 1;
