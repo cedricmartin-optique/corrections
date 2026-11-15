@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapitre 5 : diaphragmes de l'instrument, simulations (BTS OL A2)</title>
+<style>
+  :root { --bleu:#2F5496; --bleu2:#4472C4; --vert:#1B7F3B; --rouge:#C00000; --rose:#C2185B; --fond:#F5F7FB; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Times New Roman", Times, serif; font-size:18px; color:#111; background:var(--fond); line-height:1.45; }
+  header { background:var(--bleu); color:#fff; padding:18px 16px; text-align:center; }
+  header h1 { margin:0; font-family: Calibri, "Segoe UI", sans-serif; font-size:1.35em; }
+  header p { margin:6px 0 0; font-size:.9em; opacity:.9; }
+  main { max-width:980px; margin:0 auto; padding:12px; }
+  section.sim { background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.12); margin:18px 0; padding:14px 16px; scroll-margin-top:10px; }
+  h2 { font-family: Calibri, "Segoe UI", sans-serif; color:var(--bleu); margin:.2em 0 .5em; font-size:1.2em; border-bottom:2px solid var(--bleu2); padding-bottom:4px; }
+  .rappel { border:1.5px solid #000; padding:8px 12px; margin:10px 0; background:#fff; }
+  .rappel b.t { display:block; text-decoration:underline; margin-bottom:4px; }
+  button { font-family: Calibri, "Segoe UI", sans-serif; font-size:.95em; border:none; border-radius:6px; padding:9px 14px; cursor:pointer; margin:4px 4px 4px 0; }
+  .bsim { background:var(--bleu); color:#fff; }
+  .brep { background:#E8EEF8; color:var(--bleu); border:1px solid var(--bleu2); }
+  .bnav { background:var(--bleu2); color:#fff; }
+  .bnav:disabled { background:#aab; cursor:default; }
+  .simbox { display:none; border:2px solid var(--bleu2); border-radius:8px; padding:10px; margin:10px 0; background:#FBFCFE; }
+  .simbox.open, .rep.open { display:block; }
+  .simbox h3 { margin:0 0 6px; font-family: Calibri, "Segoe UI", sans-serif; color:var(--bleu2); font-size:1em; }
+  .rep { display:none; background:#F0F5EC; border-left:4px solid var(--vert); padding:8px 12px; margin:6px 0 10px; }
+  svg { width:100%; height:auto; background:#fff; border:1px solid #dde; border-radius:6px; touch-action: pan-y; }
+  svg text { font-family:"Times New Roman", Times, serif; paint-order: stroke; stroke:#fff; stroke-width:4px; stroke-linejoin:round; }
+  .ctrl { display:grid; grid-template-columns: auto 1fr auto; gap:6px 10px; align-items:center; margin:10px 0; font-size:.95em; }
+  .ctrl input[type=range] { width:100%; }
+  .val { font-variant-numeric: tabular-nums; min-width:4.5em; text-align:right; }
+  .res { font-size:1.05em; padding:8px 10px; background:#EEF3FB; border-radius:6px; margin-top:6px; }
+  .res b { color:var(--rose); }
+  .q { margin:12px 0 2px; font-weight:bold; }
+  .frac { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.92em; margin:0 2px; }
+  .frac > span:first-child { border-bottom:1px solid currentColor; padding:0 3px; }
+  .frac > span:last-child { padding:0 3px; }
+  .chain { white-space:nowrap; font-size:1.05em; }
+  .arr { display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; margin:0 4px; line-height:1; }
+  .arr small { font-size:.75em; }
+  .arr span.a { font-size:1.2em; }
+  .step { min-height:4.6em; padding:8px 10px; background:#EEF3FB; border-radius:6px; margin-top:6px; }
+  .leg { font-size:.85em; color:#333; }
+  footer { text-align:center; color:#567; font-size:.8em; padding:16px; font-family: Calibri, sans-serif; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Chapitre 5 : diaphragmes de l'instrument</h1>
+  <p>BTS OL A2, Optique géométrique et physique, Cédric Martin</p>
+</header>
+<main>
+
+<!-- ======================= SIMULATION 1 ======================= -->
+<section class="sim" id="sim1">
+  <h2>Simulation 1 : qui est le DO ?</h2>
+  <div class="rappel"><b class="t">Rappel</b>
+    Le <b>diaphragme d'ouverture (DO)</b> est le diaphragme réel de l'instrument qui <u>limite l'ouverture du faisceau utile</u>, donc la quantité de lumière qui traverse l'instrument.
+    Le <b>faisceau utile</b> est le faisceau le plus ouvert possible, issu de A, qui traverse tout l'instrument sans être arrêté.
+  </div>
+  <p>On reprend le montage du cours : L<sub>1</sub> (f'<sub>1</sub> = 2 cm, R<sub>1</sub> = 2 cm) et L<sub>2</sub> (f'<sub>2</sub> = 1 cm, R<sub>2</sub> = 1,5 cm), séparées de 6 cm. Tu peux ajouter le diaphragme Δ et le déplacer.</p>
+  <button class="bsim" data-open="box1">Afficher la simulation</button>
+  <div class="simbox" id="box1">
+    <h3>Simulation</h3>
+    <svg id="svg1" viewBox="0 0 760 300"></svg>
+    <div class="leg">Hachures : faisceau utile. En rose : le DO. En vert : PE et PS (en pointillés si elles sont virtuelles).</div>
+    <div class="ctrl">
+      <label for="cDelta">Diaphragme Δ</label><input type="checkbox" id="cDelta"><span></span>
+      <label for="sXd">Position de Δ</label><input type="range" id="sXd" min="0.3" max="5.7" step="0.1" value="1"><span class="val" id="vXd"></span>
+      <label for="sRd">Rayon de Δ</label><input type="range" id="sRd" min="0.3" max="1.9" step="0.1" value="1"><span class="val" id="vRd"></span>
+      <label for="sXa">Position de A</label><input type="range" id="sXa" min="-6" max="-2.3" step="0.1" value="-3.5"><span class="val" id="vXa"></span>
+    </div>
+    <div class="res" id="res1"></div>
+  </div>
+  <p class="q">1) Sans Δ (montage ①), quel diaphragme est le DO ?</p>
+  <button class="brep" data-open="r11">Afficher la réponse</button>
+  <div class="rep" id="r11">C'est L<sub>1</sub> : le faisceau le plus ouvert issu de A s'appuie sur les bords de L<sub>1</sub>, et il passe encore dans L<sub>2</sub>. Donc DO ≡ PE ≡ L<sub>1</sub>.</div>
+  <p class="q">2) Avec Δ placé à 1 cm de L<sub>1</sub> et de rayon 1 cm (montage ②), qui est le DO ?</p>
+  <button class="brep" data-open="r12">Afficher la réponse</button>
+  <div class="rep" id="r12">C'est Δ : depuis A', Δ est vu sous le plus petit angle. Le faisceau utile s'appuie sur ses bords. DO ≡ Δ, qui est aussi la pupille intermédiaire.</div>
+  <p class="q">3) Le DO est-il toujours le plus petit diaphragme ?</p>
+  <button class="brep" data-open="r13">Afficher la réponse</button>
+  <div class="rep" id="r13">Non. Diminue le rayon de Δ en le plaçant près de A' puis loin de A' : le DO dépend de la position des diaphragmes par rapport à l'image intermédiaire, pas seulement de leur taille.</div>
+</section>
+
+<!-- ======================= SIMULATION 2 ======================= -->
+<section class="sim" id="sim2">
+  <h2>Simulation 2 : construire PE et PS</h2>
+  <div class="rappel"><b class="t">Rappel</b>
+    Les <b>pupilles</b> sont les conjuguées du DO. La pupille d'entrée PE appartient à l'espace objet, la pupille de sortie PS à l'espace image.
+    <div style="margin-top:6px" class="chain">PE <span class="arr"><small>sous-système</small><span class="a">⟶</span><small>avant DO</small></span> DO <span class="arr"><small>sous-système</small><span class="a">⟶</span><small>après DO</small></span> PS</div>
+  </div>
+  <p>Montage ② du cours. Avance étape par étape.</p>
+  <button class="bsim" data-open="box2">Afficher la simulation</button>
+  <div class="simbox" id="box2">
+    <h3>Simulation</h3>
+    <svg id="svg2" viewBox="0 0 760 330"></svg>
+    <div class="step" id="step2"></div>
+    <button class="bnav" id="prev2">Étape précédente</button>
+    <button class="bnav" id="next2">Étape suivante</button>
+  </div>
+  <p class="q">Quelle est la chaîne des pupilles dans le montage ② ?</p>
+  <button class="brep" data-open="r21">Afficher la réponse</button>
+  <div class="rep" id="r21"><span class="chain">PE <span class="arr"><small>L<sub>1</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> DO ≡ Δ <span class="arr"><small>L<sub>2</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> PS</span><br>
+  PE est virtuelle (2 cm après L<sub>1</sub>, rayon 2 cm) ; PS est réelle (1,25 cm après L<sub>2</sub>, rayon 0,25 cm).</div>
+</section>
+
+<!-- ======================= SIMULATION 3 ======================= -->
+<section class="sim" id="sim3">
+  <h2>Simulation 3 : la méthode des angles</h2>
+  <div class="rappel"><b class="t">Rappel</b>
+    On place l'image intermédiaire A<sub>i</sub> (A <span class="arr"><small>L<sub>1</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> A<sub>i</sub>).
+    Depuis A<sub>i</sub>, on regarde les bords des diaphragmes : <b>le DO est vu sous le plus petit angle</b>.<br>
+    tan θ<sub>1</sub> = <span class="frac"><span>R<sub>1</sub></span><span>d<sub>1</sub></span></span>
+    &nbsp;et&nbsp; tan θ<sub>2</sub> = <span class="frac"><span>R<sub>2</sub></span><span>d<sub>2</sub></span></span>
+    &nbsp;où d<sub>1</sub> et d<sub>2</sub> sont les distances de A<sub>i</sub> à L<sub>1</sub> et à L<sub>2</sub>.
+  </div>
+  <button class="bsim" data-open="box3">Afficher la simulation</button>
+  <div class="simbox" id="box3">
+    <h3>Simulation</h3>
+    <svg id="svg3" viewBox="0 0 760 300"></svg>
+    <div class="ctrl">
+      <label for="sXi">Position de A<sub>i</sub></label><input type="range" id="sXi" min="-4" max="3.7" step="0.05" value="2.6"><span class="val" id="vXi"></span>
+      <label for="sR1">Rayon de L<sub>1</sub></label><input type="range" id="sR1" min="0.5" max="2.5" step="0.1" value="2"><span class="val" id="vR1"></span>
+      <label for="sR2">Rayon de L<sub>2</sub></label><input type="range" id="sR2" min="0.5" max="2.5" step="0.1" value="2"><span class="val" id="vR2"></span>
+    </div>
+    <div class="res" id="res3"></div>
+  </div>
+  <p class="q">1) A<sub>i</sub> est tout près de L<sub>2</sub>. Qui est le DO ?</p>
+  <button class="brep" data-open="r31">Afficher la réponse</button>
+  <div class="rep" id="r31">L<sub>1</sub> : depuis A<sub>i</sub>, le bord de L<sub>1</sub> (loin) est vu sous un petit angle θ<sub>1</sub>, le bord de L<sub>2</sub> (proche) sous un grand angle θ<sub>2</sub>. θ<sub>1</sub> &lt; θ<sub>2</sub> donc L<sub>1</sub> est le DO.</div>
+  <p class="q">2) A<sub>i</sub> est avant L<sub>1</sub> (image virtuelle pour L<sub>1</sub>). Qui est le DO ?</p>
+  <button class="brep" data-open="r32">Afficher la réponse</button>
+  <div class="rep" id="r32">Avec deux lentilles de même rayon, L<sub>2</sub>, plus éloignée de A<sub>i</sub>, est vue sous le plus petit angle : θ<sub>2</sub> &lt; θ<sub>1</sub> donc L<sub>2</sub> est le DO.</div>
+</section>
+
+</main>
+<footer>Cédric Martin, Institut Emmanuel d'Alzon. Simulations dans les conditions de Gauss (lentilles minces).</footer>
+
+<script>
+/* ---------- ouverture / fermeture ---------- */
+document.querySelectorAll('[data-open]').forEach(b => {
+  const t = document.getElementById(b.dataset.open);
+  const lab = b.textContent;
+  b.addEventListener('click', () => {
+    const o = t.classList.toggle('open');
+    b.textContent = o ? lab.replace('Afficher', 'Masquer') : lab;
+  });
+});
+function openFromHash() {
+  const h = location.hash.replace('#', '');
+  const n = { sim1: 'box1', sim2: 'box2', sim3: 'box3' }[h];
+  if (n) {
+    const box = document.getElementById(n);
+    if (!box.classList.contains('open')) document.querySelector(`[data-open="${n}"]`).click();
+    setTimeout(() => document.getElementById(h).scrollIntoView({ behavior: 'smooth' }), 60);
+  }
+}
+window.addEventListener('hashchange', openFromHash);
+
+/* ---------- outils SVG ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(svg, tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.innerHTML = text;
+  svg.appendChild(e); return e;
+}
+function defs(svg) {
+  const d = el(svg, 'defs', {});
+  d.innerHTML = `
+    <pattern id="h${svg.id}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#777" stroke-width="1"/></pattern>
+    <marker id="a${svg.id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+    <marker id="m${svg.id}" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>`;
+}
+function view(x0, x1, yc, sc) { return { X: x => (x - x0) * sc, Y: y => yc - y * sc, sc }; }
+function line(svg, v, a, b, o = {}) {
+  return el(svg, 'line', { x1: v.X(a[0]), y1: v.Y(a[1]), x2: v.X(b[0]), y2: v.Y(b[1]),
+    stroke: o.c || '#000', 'stroke-width': o.w || 1.4, 'stroke-dasharray': o.d || '', ...(o.extra || {}) });
+}
+function lens(svg, v, x, R, name, below) {
+  el(svg, 'line', { x1: v.X(x), y1: v.Y(-R), x2: v.X(x), y2: v.Y(R), stroke: '#000', 'stroke-width': 2,
+    'marker-start': `url(#a${svg.id})`, 'marker-end': `url(#a${svg.id})` });
+  el(svg, 'text', { x: v.X(x) + 6, y: below ? v.Y(-R) + 18 : v.Y(R) - 6, 'font-size': 16 }, name);
+}
+function diaph(svg, v, x, r, outer, c = '#000', dash = '') {
+  for (const s of [1, -1]) line(svg, v, [x, s * r], [x, s * outer], { c, w: 4, d: dash });
+}
+function tick(svg, v, x, label, up, dx = 0) {
+  line(svg, v, [x, -0.1], [x, 0.1], { w: 1.2 });
+  if (label) el(svg, 'text', { x: v.X(x) + dx, y: up ? v.Y(0) - 9 : v.Y(0) + 19, 'font-size': 15, 'text-anchor': 'middle' }, label);
+}
+const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
+
+/* =================== SIMULATION 1 =================== */
+(function () {
+  const svg = document.getElementById('svg1');
+  const f1 = 2, R1 = 2, f2 = 1, R2 = 1.5, x2 = 6, XR = 12.5;
+  const v = view(-6.5, 12.5, 150, 40);
+  const ids = ['sXd', 'sRd', 'sXa'], cb = document.getElementById('cDelta');
+  function draw() {
+    const xd = +sXd.value, rd = +sRd.value, xa = +sXa.value, withD = cb.checked;
+    vXd.textContent = fmt(xd) + ' cm'; vRd.textContent = fmt(rd) + ' cm'; vXa.textContent = fmt(xa) + ' cm';
+    sXd.disabled = sRd.disabled = !withD;
+    svg.innerHTML = ''; defs(svg);
+    // hauteur d'un rayon de pente u issu de A, à l'abscisse x (lentilles minces)
+    function hAt(u, x) {
+      const h1 = -u * xa;                 // sur L1
+      if (x <= 0) return u * (x - xa);
+      const u1 = u - h1 / f1;
+      if (x <= x2) return h1 + u1 * x;
+      const h2 = h1 + u1 * x2, u2 = u1 - h2 / f2;
+      return h2 + u2 * (x - x2);
+    }
+    const diaphs = [{ n: 'L₁', x: 0, r: R1 }, { n: 'L₂', x: x2, r: R2 }];
+    if (withD) diaphs.push({ n: 'Δ', x: xd, r: rd });
+    let best = null;
+    for (const d of diaphs) {
+      const k = Math.abs(hAt(1, d.x)); const u = k < 1e-9 ? Infinity : d.r / k;
+      if (!best || u < best.u) best = { ...d, u };
+    }
+    const u = best.u;
+    // faisceau utile
+    const xs = [xa, 0]; if (withD) xs.push(xd); xs.push(x2, XR);
+    xs.sort((a, b) => a - b);
+    // ajoute les points de croisement de l'axe (images) pour un tracé exact
+    const pts = []; const N = 400;
+    for (let i = 0; i <= N; i++) { const x = xa + (XR - xa) * i / N; pts.push([x, hAt(u, x)]); }
+    const top = pts.map(p => `${v.X(p[0])},${v.Y(p[1])}`).join(' ');
+    const bot = pts.slice().reverse().map(p => `${v.X(p[0])},${v.Y(-p[1])}`).join(' ');
+    el(svg, 'polygon', { points: top + ' ' + bot, fill: `url(#h${svg.id})`, stroke: 'none' });
+    el(svg, 'polyline', { points: top, fill: 'none', stroke: '#000', 'stroke-width': 1.5 });
+    el(svg, 'polyline', { points: pts.map(p => `${v.X(p[0])},${v.Y(-p[1])}`).join(' '), fill: 'none', stroke: '#000', 'stroke-width': 1.5 });
+    // axe, lentilles, foyers
+    line(svg, v, [-6.4, 0], [12.4, 0], { w: 1 });
+    lens(svg, v, 0, R1, 'L₁'); lens(svg, v, x2, R2, 'L₂');
+    if (withD) { diaph(svg, v, xd, rd, Math.max(rd + 0.8, 2.2)); el(svg, 'text', { x: v.X(xd) + 7, y: v.Y(rd + 0.6), 'font-size': 16 }, 'Δ'); }
+    // DO en rose
+    diaph(svg, v, best.x, best.r, best.r + 0.35, '#C2185B');
+    // PE : image du DO par la partie avant (L1 si DO après L1)
+    let pe, ps;
+    if (best.x === 0) pe = { x: 0, r: R1, real: true };
+    else { const inv = 1 / best.x - 1 / f1; const x = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv; pe = { x, r: Math.abs(best.r * x / best.x), real: x < 0 }; }
+    if (best.x === x2) ps = { x: x2, r: R2, real: true };
+    else { const p = best.x - x2; const inv = 1 / f2 + 1 / p; const x = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv; ps = { x: x2 + x, r: Math.abs(best.r * x / p), real: x > 0 }; }
+    function drawP(p, name) {
+      if (!isFinite(p.x) || p.x < -6.3 || p.x > 12.3) return name + ' à l\'infini ou hors du schéma';
+      if (!(p.x === best.x)) diaph(svg, v, p.x, p.r, p.r + 0.6, '#1B7F3B', p.real ? '' : '5 4');
+      el(svg, 'text', { x: v.X(p.x) + 6, y: v.Y(-(p.r + 0.6)) + 18, 'font-size': 15, fill: '#1B7F3B' }, name);
+      return `${name} : ${fmt(p.x)} cm après L₁ (rayon ${fmt(p.r)} cm), ${p.real ? 'réelle' : 'virtuelle'}`;
+    }
+    const tPE = best.x === 0 ? 'PE ≡ DO ≡ L₁' : drawP(pe, 'PE');
+    const tPS = best.x === x2 ? 'PS ≡ DO ≡ L₂' : drawP(ps, 'PS');
+    tick(svg, v, -f1, 'F₁'); tick(svg, v, f1, "F'₁"); tick(svg, v, x2 - f2, 'F₂'); tick(svg, v, x2 + f2, "F'₂", true, -13);
+    tick(svg, v, xa, 'A', true);
+    res1.innerHTML = `Le DO est <b>${best.n}</b>.<br>${tPE}<br>${tPS}`;
+  }
+  [cb, ...ids.map(i => document.getElementById(i))].forEach(e => e.addEventListener('input', draw));
+  draw();
+})();
+
+/* =================== SIMULATION 2 =================== */
+(function () {
+  const svg = document.getElementById('svg2');
+  const v = view(-5, 12, 165, 44);
+  const xa = -3.5, xA1 = 14 / 3, x2 = 6, xA2 = 10, h1 = xA1 / (xA1 - 1);
+  const steps = [
+    'Le montage ② : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
+    'Étape 1 : on construit A\', l\'image de A par L₁ (calcul : A\' est à 4,67 cm après L₁). C\'est l\'image intermédiaire.',
+    'Étape 2 : depuis A\', on regarde les bords des trois diaphragmes. Δ est vu sous le plus petit angle : <b>Δ est le DO</b>.',
+    'Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
+    'Étape 4 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit jusqu\'à A\'\' après L₂.',
+    'Étape 5 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
+    'Étape 6 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
+    'Bilan : PE <span class="arr"><small>L₁</small><span class="a">⟶</span><small>&nbsp;</small></span> DO ≡ Δ <span class="arr"><small>L₂</small><span class="a">⟶</span><small>&nbsp;</small></span> PS. Les rayons du faisceau utile qui entrent visent les bords de PE.'
+  ];
+  let k = 0;
+  function draw() {
+    svg.innerHTML = ''; defs(svg);
+    const G = '#1B7F3B';
+    if (k >= 4) {
+      const top = [[xa, 0], [0, h1], [1, 1], [xA1, 0], [x2, h1 * (xA1 - x2) / xA1], [xA2, 0], [11.6, 0.364 / 4 * 1.6]];
+      const pts = top.map(p => `${v.X(p[0])},${v.Y(p[1])}`).join(' ') + ' ' + top.slice().reverse().map(p => `${v.X(p[0])},${v.Y(-p[1])}`).join(' ');
+      el(svg, 'polygon', { points: pts, fill: `url(#h${svg.id})` });
+      for (const s of [1, -1]) el(svg, 'polyline', { points: top.map(p => `${v.X(p[0])},${v.Y(s * p[1])}`).join(' '), fill: 'none', stroke: '#000', 'stroke-width': 1.5 });
+    } else if (k === 3) {
+      for (const s of [1, -1]) { line(svg, v, [0, s * h1], [xA1, 0], { w: 1.5 }); }
+    }
+    line(svg, v, [-4.8, 0], [11.8, 0], { w: 1 });
+    lens(svg, v, 0, 2, 'L₁', true); lens(svg, v, x2, 1.5, 'L₂', true);
+    diaph(svg, v, 1, 1, 1.9); el(svg, 'text', { x: v.X(1), y: v.Y(2.15), 'font-size': 16, 'text-anchor': 'middle' }, 'Δ');
+    if (k === 2) {
+      for (const [x, r, c] of [[0, 2, '#999'], [1, 1, '#C2185B'], [x2, 1.5, '#999']]) line(svg, v, [xA1, 0], [x, r], { c, w: 1.4, d: c === '#999' ? '5 4' : '' });
+    }
+    if (k >= 2) diaph(svg, v, 1, 1, 1.35, '#C2185B');
+    if (k >= 5) {
+      line(svg, v, [0, 1], [1, 1], { c: G }); line(svg, v, [-2, 0], [2, 2], { c: G, d: '6 4' }); line(svg, v, [0, 0], [2, 2], { c: G, d: '6 4' });
+      diaph(svg, v, 2, 2, 2.5, G, '5 4'); el(svg, 'text', { x: v.X(2) + 7, y: v.Y(2.55), 'font-size': 16, fill: G }, 'PE');
+    }
+    if (k >= 6) {
+      line(svg, v, [1, 1], [x2, 1], { c: G }); line(svg, v, [x2, 1], [7.7, -0.7], { c: G }); line(svg, v, [1, 1], [7.7, -0.34], { c: G });
+      diaph(svg, v, 7.25, 0, 0.25, G); el(svg, 'text', { x: v.X(6.75), y: v.Y(-0.75) + 10, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PS');
+    }
+    tick(svg, v, -2, 'F₁'); tick(svg, v, 2, "F'₁"); tick(svg, v, 5, 'F₂'); tick(svg, v, 7, "F'₂", true, 26); tick(svg, v, xa, 'A', true);
+    if (k >= 1) tick(svg, v, xA1, "A'", true, -8);
+    if (k >= 4) tick(svg, v, xA2, "A''", true);
+    step2.innerHTML = steps[k];
+    prev2.disabled = k === 0; next2.disabled = k === steps.length - 1;
+  }
+  prev2.onclick = () => { k--; draw(); }; next2.onclick = () => { k++; draw(); };
+  draw();
+})();
+
+/* =================== SIMULATION 3 =================== */
+(function () {
+  const svg = document.getElementById('svg3');
+  const v = view(-5, 6.1, 160, 62);
+  function arc(c, r, t1, t2, col) {
+    const p = a => [v.X(c[0] + r * Math.cos(a * Math.PI / 180)), v.Y(c[1] + r * Math.sin(a * Math.PI / 180))];
+    const [xa, ya] = p(t1), [xb, yb] = p(t2);
+    el(svg, 'path', { d: `M${xa},${ya} A${r * v.sc},${r * v.sc} 0 0 0 ${xb},${yb}`, fill: 'none', stroke: col, 'stroke-width': 1.6 });
+  }
+  function draw() {
+    let xi = +sXi.value; const R1 = +sR1.value, R2 = +sR2.value;
+    if (Math.abs(xi) < 0.15) xi = xi < 0 ? -0.15 : 0.15;
+    vXi.textContent = fmt(xi) + ' cm'; vR1.textContent = fmt(R1) + ' cm'; vR2.textContent = fmt(R2) + ' cm';
+    svg.innerHTML = ''; defs(svg);
+    const d1 = Math.abs(xi), d2 = Math.abs(4 - xi);
+    const t1 = Math.atan(R1 / d1) * 180 / Math.PI, t2 = Math.atan(R2 / d2) * 180 / Math.PI;
+    const doL1 = t1 < t2;
+    const c1 = doL1 ? '#C00000' : '#1B7F3B', c2 = doL1 ? '#1B7F3B' : '#C00000';
+    line(svg, v, [-4.9, 0], [5.9, 0], { w: 1 });
+    lens(svg, v, 0, R1, 'L₁'); lens(svg, v, 4, R2, 'L₂');
+    line(svg, v, [xi, 0], [0, R1], { c: c1, w: 2, d: xi < 0 ? '' : '' });
+    line(svg, v, [xi, 0], [4, R2], { c: c2, w: 2 });
+    el(svg, 'circle', { cx: v.X(xi), cy: v.Y(0), r: 4, fill: '#000' });
+    el(svg, 'text', { x: v.X(xi), y: v.Y(0) + 22, 'font-size': 17, 'text-anchor': 'middle' }, 'A<tspan font-size="12" dy="4">i</tspan>');
+    // angles : direction de chaque bord vue depuis Ai
+    const a1 = Math.atan2(R1, 0 - xi) * 180 / Math.PI, a2 = Math.atan2(R2, 4 - xi) * 180 / Math.PI;
+    const base1 = xi > 0 ? 180 : 0, base2 = xi < 4 ? 0 : 180;
+    const r1 = Math.min(0.9, d1 * 0.6), r2 = Math.min(0.9, d2 * 0.6);
+    const rr2 = xi < 0 ? Math.min(0.9, d1 * 0.4) : r2, rr1 = xi < 0 ? Math.min(rr2 + 0.9, d1 * 0.85) : r1;
+    if (base1 === 180) arc([xi, 0], rr1, a1, 180, c1); else arc([xi, 0], rr1, 0, a1, c1);
+    arc([xi, 0], rr2, 0, a2, c2);
+    function lab(r, a, t, col) {
+      const x = v.X(xi + r * Math.cos(a * Math.PI / 180)), y = v.Y(r * Math.sin(a * Math.PI / 180));
+      el(svg, 'text', { x, y: y + 5, 'font-size': 16, fill: col, 'text-anchor': 'middle' }, t);
+    }
+    const m1 = base1 === 180 ? (a1 + 180) / 2 : (xi < 0 ? (a1 + a2) / 2 : a1 / 2);
+    lab(rr1 + 0.32, m1, 'θ<tspan font-size="11" dy="4">1</tspan>', c1);
+    lab(rr2 + 0.3, a2 / 2, 'θ<tspan font-size="11" dy="4">2</tspan>', c2);
+    const place = xi < 0 ? 'A<sub>i</sub> est avant L<sub>1</sub> : image virtuelle pour L<sub>1</sub> (espace intermédiaire).' : 'A<sub>i</sub> est entre L<sub>1</sub> et L<sub>2</sub>.';
+    res3.innerHTML = `${place}<br>θ<sub>1</sub> = ${fmt(t1)}°, θ<sub>2</sub> = ${fmt(t2)}° : ` +
+      (Math.abs(t1 - t2) < 0.05 ? 'les deux angles sont égaux, le faisceau s\'appuie sur les deux diaphragmes.' :
+      `θ<sub>${doL1 ? 1 : 2}</sub> est le plus petit, donc <b>L<sub>${doL1 ? 1 : 2}</sub> est le DO</b>. En rouge : bord du faisceau utile.`);
+  }
+  [sXi, sR1, sR2].forEach(e => e.addEventListener('input', draw));
+  draw();
+})();
+openFromHash();
+</script>
+</body>
+</html>
