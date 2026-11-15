@@ -325,7 +325,7 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
      `DO ≡ Δ ≡ PI`],
     ['Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
      `A ${ar(1)} A'`],
-    [`Étape 4 : on construit A'', l'image de A' par L₂. A' est un objet réel pour L₂, placé avant F₂ : <span style="white-space:nowrap"><span style="text-decoration:overline">F<sub>2</sub>A'</span> = −0,33 cm</span>. Relation de Newton : <span style="text-decoration:overline">F'<sub>2</sub>A''</span> = <span class="frac"><span>f<sub>2</sub> × f'<sub>2</sub></span><span><span style="text-decoration:overline">F<sub>2</sub>A'</span></span></span> = <span class="frac"><span>−1 × 1</span><span>−0,33</span></span> = 3 cm. A'' est donc à 4 cm après L₂ (image réelle).`,
+    [`Étape 4 : on construit A'', l'image de A' par L₂. <b>Graphiquement</b> : on prolonge un rayon du faisceau intermédiaire après A' jusqu'à L₂ (point I, en bleu). On trace le rayon parallèle à lui passant par le centre de L₂ (en orange) : il coupe le plan focal image de L₂ (pointillés, en F'₂) au foyer secondaire φ'₂. Le rayon émergent part de I et passe par φ'₂ : il coupe l'axe en A''. <b>Par le calcul</b> : <span style="white-space:nowrap"><span style="text-decoration:overline">F<sub>2</sub>A'</span> = −0,33 cm</span>. Relation de Newton : <span style="text-decoration:overline">F'<sub>2</sub>A''</span> = <span class="frac"><span>f<sub>2</sub> × f'<sub>2</sub></span><span><span style="text-decoration:overline">F<sub>2</sub>A'</span></span></span> = <span class="frac"><span>−1 × 1</span><span>−0,33</span></span> = 3 cm. A'' est donc à 4 cm après L₂ (image réelle), comme sur le tracé.`,
      `A' ${ar(2)} A''`],
     ['Étape 5 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit le faisceau à travers L₂ jusqu\'à A\'\'.',
      `A ${ar(1)} A' ${ar(2)} A''`],
@@ -362,6 +362,16 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     if (k >= 7) {
       line(svg, v, [1, 1], [x2, 1], { c: G }); line(svg, v, [x2, 1], [7.7, -0.7], { c: G }); line(svg, v, [1, 1], [7.7, -0.34], { c: G });
       diaph(svg, v, 7.25, 0, 0.25, G); el(svg, 'text', { x: v.X(6.75), y: v.Y(-0.75) + 10, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PS');
+    }
+    if (k === 4) {
+      const B = '#1565C0', O = '#E67E00', yI = h1 * (xA1 - x2) / xA1, sl = -h1 / xA1, yP = sl * (7 - x2);
+      line(svg, v, [7, -1.25], [7, 1.25], { c: '#555', w: 1, d: '3 3' });
+      line(svg, v, [xA1, 0], [x2, yI], { c: B, w: 1.8 });
+      line(svg, v, [x2 - 0.9, -sl * 0.9], [7.6, sl * 1.6], { c: O, w: 1.5, d: '6 4' });
+      line(svg, v, [x2, yI], [xA2 + 1.2, -yI / 4 * 1.2], { c: B, w: 1.8 });
+      el(svg, 'circle', { cx: v.X(7), cy: v.Y(yP), r: 3.2, fill: O });
+      el(svg, 'text', { x: v.X(7) + 7, y: v.Y(yP) + 20, 'font-size': 15, fill: O }, "φ'<tspan font-size='11' dy='4'>2</tspan>");
+      el(svg, 'text', { x: v.X(x2) - 12, y: v.Y(yI) + 18, 'font-size': 15, fill: B, 'text-anchor': 'middle' }, 'I');
     }
     tick(svg, v, -2, 'F₁'); tick(svg, v, 2, "F'₁"); tick(svg, v, 5, 'F₂'); tick(svg, v, 7, "F'₂", true, 26); tick(svg, v, xa, 'A', true);
     if (k >= 1) tick(svg, v, xA1, "A'", true, -8);
