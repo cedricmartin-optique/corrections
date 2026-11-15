@@ -325,11 +325,13 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
      `DO ≡ Δ ≡ PI`],
     ['Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
      `A ${ar(1)} A'`],
-    ['Étape 4 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit jusqu\'à A\'\' après L₂.',
+    [`Étape 4 : on construit A'', l'image de A' par L₂. A' est un objet réel pour L₂, placé avant F₂ : <span style="white-space:nowrap"><span style="text-decoration:overline">F<sub>2</sub>A'</span> = −0,33 cm</span>. Relation de Newton : <span style="text-decoration:overline">F'<sub>2</sub>A''</span> = <span class="frac"><span>f<sub>2</sub> × f'<sub>2</sub></span><span><span style="text-decoration:overline">F<sub>2</sub>A'</span></span></span> = <span class="frac"><span>−1 × 1</span><span>−0,33</span></span> = 3 cm. A'' est donc à 4 cm après L₂ (image réelle).`,
+     `A' ${ar(2)} A''`],
+    ['Étape 5 : on complète le tracé en raccordant A au faisceau utile intermédiaire sur L₁, puis on poursuit le faisceau à travers L₂ jusqu\'à A\'\'.',
      `A ${ar(1)} A' ${ar(2)} A''`],
-    ['Étape 5 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
+    ['Étape 6 : PE est l\'image de Δ par L₁ (retour inverse de la lumière). Rayon parallèle à l\'axe passant par F₁, et rayon passant par le centre de L₁ : ils se coupent en PE, virtuelle, 2 cm après L₁, rayon 2 cm.',
      `PE ${ar(1)} DO ≡ Δ`],
-    ['Étape 6 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
+    ['Étape 7 : PS est l\'image de Δ par L₂. Rayon parallèle à l\'axe ressortant par F\'₂, et rayon passant par le centre de L₂ : PS est réelle, 1,25 cm après L₂, rayon 0,25 cm.',
      `DO ≡ Δ ${ar(2)} PS`],
     ['Bilan : la chaîne des pupilles de l\'exemple 2. Les rayons du faisceau utile qui entrent visent les bords de PE.',
      `PE ${ar(1)} DO ≡ Δ ${ar(2)} PS`]
@@ -338,12 +340,12 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   function draw() {
     svg.innerHTML = ''; defs(svg);
     const G = '#1B7F3B';
-    if (k >= 4) {
+    if (k >= 5) {
       const top = [[xa, 0], [0, h1], [1, 1], [xA1, 0], [x2, h1 * (xA1 - x2) / xA1], [xA2, 0], [11.6, 0.364 / 4 * 1.6]];
       const pts = top.map(p => `${v.X(p[0])},${v.Y(p[1])}`).join(' ') + ' ' + top.slice().reverse().map(p => `${v.X(p[0])},${v.Y(-p[1])}`).join(' ');
       el(svg, 'polygon', { points: pts, fill: `url(#h${svg.id})` });
       for (const s of [1, -1]) el(svg, 'polyline', { points: top.map(p => `${v.X(p[0])},${v.Y(s * p[1])}`).join(' '), fill: 'none', stroke: '#000', 'stroke-width': 1.5 });
-    } else if (k === 3) {
+    } else if (k === 3 || k === 4) {
       for (const s of [1, -1]) { line(svg, v, [0, s * h1], [xA1, 0], { w: 1.5 }); }
     }
     line(svg, v, [-4.8, 0], [11.8, 0], { w: 1 });
@@ -353,11 +355,11 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
       for (const [x, r, c] of [[0, 2, '#999'], [1, 1, '#C2185B'], [x2, 1.5, '#999']]) line(svg, v, [xA1, 0], [x, r], { c, w: 1.4, d: c === '#999' ? '5 4' : '' });
     }
     if (k >= 2) diaph(svg, v, 1, 1, 1.35, '#C2185B');
-    if (k >= 5) {
+    if (k >= 6) {
       line(svg, v, [0, 1], [1, 1], { c: G }); line(svg, v, [-2, 0], [2, 2], { c: G, d: '6 4' }); line(svg, v, [0, 0], [2, 2], { c: G, d: '6 4' });
       diaph(svg, v, 2, 2, 2.5, G, '5 4'); el(svg, 'text', { x: v.X(2) + 7, y: v.Y(2.55), 'font-size': 16, fill: G }, 'PE');
     }
-    if (k >= 6) {
+    if (k >= 7) {
       line(svg, v, [1, 1], [x2, 1], { c: G }); line(svg, v, [x2, 1], [7.7, -0.7], { c: G }); line(svg, v, [1, 1], [7.7, -0.34], { c: G });
       diaph(svg, v, 7.25, 0, 0.25, G); el(svg, 'text', { x: v.X(6.75), y: v.Y(-0.75) + 10, 'font-size': 16, fill: G, 'text-anchor': 'middle' }, 'PS');
     }
