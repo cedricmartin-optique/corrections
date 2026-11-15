@@ -25,7 +25,7 @@
   .simbox.open, .rep.open { display:block; }
   .simbox h3 { margin:0 0 6px; font-family: Calibri, "Segoe UI", sans-serif; color:var(--bleu2); font-size:1em; }
   .rep { display:none; background:#F0F5EC; border-left:4px solid var(--vert); padding:8px 12px; margin:6px 0 10px; }
-  svg { width:100%; height:auto; background:#fff; border:1px solid #dde; border-radius:6px; touch-action: pan-y; }
+  svg { width:100%; height:auto; background:#fff; border:1px solid #dde; border-radius:6px; touch-action: auto; }
   svg text { font-family:"Times New Roman", Times, serif; paint-order: stroke; stroke:#fff; stroke-width:4px; stroke-linejoin:round; }
   .ctrl { display:grid; grid-template-columns: auto 1fr auto; gap:6px 10px; align-items:center; margin:10px 0; font-size:.95em; }
   .ctrl input[type=range] { width:100%; }
@@ -51,7 +51,6 @@
   <p>BTS OL A2, Optique géométrique et physique, Cédric Martin</p>
 </header>
 <main>
-<p id="toutes" style="display:none;text-align:center;margin:8px 0"><a href="#" onclick="history.replaceState(null,'',location.pathname);openFromHash();window.scrollTo(0,0);return false;">Voir toutes les simulations</a></p>
 
 <!-- ======================= SIMULATION 1 ======================= -->
 <section class="sim" id="sim1">
@@ -153,7 +152,6 @@ function openFromHash() {
   const h = location.hash.replace('#', '');
   const n = { sim1: 'box1', sim2: 'box2', sim3: 'box3' }[h];
   document.querySelectorAll('section.sim').forEach(s => { s.style.display = (!n || s.id === h) ? '' : 'none'; });
-  document.getElementById('toutes').style.display = n ? '' : 'none';
   if (n) {
     const box = document.getElementById(n);
     if (!box.classList.contains('open')) document.querySelector(`[data-open="${n}"]`).click();
