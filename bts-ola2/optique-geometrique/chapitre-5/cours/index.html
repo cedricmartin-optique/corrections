@@ -51,32 +51,33 @@
   <p>BTS OL A2, Optique géométrique et physique, Cédric Martin</p>
 </header>
 <main>
+<p id="toutes" style="display:none;text-align:center;margin:8px 0"><a href="#" onclick="history.replaceState(null,'',location.pathname);openFromHash();window.scrollTo(0,0);return false;">Voir toutes les simulations</a></p>
 
 <!-- ======================= SIMULATION 1 ======================= -->
 <section class="sim" id="sim1">
-  <h2>Simulation 1 : qui est le DO ?</h2>
+  <h2>Qui est le DO ?</h2>
   <div class="rappel"><b class="t">Rappel</b>
     Le <b>diaphragme d'ouverture (DO)</b> est le diaphragme réel de l'instrument qui <u>limite l'ouverture du faisceau utile</u>, donc la quantité de lumière qui traverse l'instrument.
     Le <b>faisceau utile</b> est le faisceau le plus ouvert possible, issu de A, qui traverse tout l'instrument sans être arrêté.
   </div>
-  <p>On reprend le montage du cours : L<sub>1</sub> (f'<sub>1</sub> = 2 cm, R<sub>1</sub> = 2 cm) et L<sub>2</sub> (f'<sub>2</sub> = 1 cm, R<sub>2</sub> = 1,5 cm), séparées de 6 cm. Tu peux ajouter le diaphragme Δ et le déplacer.</p>
+  <p>On reprend les exemples du cours : L<sub>1</sub> (f'<sub>1</sub> = 2 cm, R<sub>1</sub> = 2 cm) et L<sub>2</sub> (f'<sub>2</sub> = 1 cm, R<sub>2</sub> = 1,5 cm), séparées de 6 cm. Tu peux ajouter le diaphragme Δ et le déplacer.</p>
   <button class="bsim" data-open="box1">Afficher la simulation</button>
   <div class="simbox" id="box1">
     <h3>Simulation</h3>
     <svg id="svg1" viewBox="0 0 760 300"></svg>
     <div class="leg">Hachures : faisceau utile. En rose : le DO. En vert : PE et PS (en pointillés si elles sont virtuelles).</div>
     <div class="ctrl">
-      <label for="cDelta">Diaphragme Δ</label><input type="checkbox" id="cDelta"><span></span>
+      <label for="cDelta">Diaphragme Δ (exemple 2)</label><input type="checkbox" id="cDelta"><span></span>
       <label for="sXd">Position de Δ</label><input type="range" id="sXd" min="0.3" max="5.7" step="0.1" value="1"><span class="val" id="vXd"></span>
       <label for="sRd">Rayon de Δ</label><input type="range" id="sRd" min="0.3" max="1.9" step="0.1" value="1"><span class="val" id="vRd"></span>
       <label for="sXa">Position de A</label><input type="range" id="sXa" min="-6" max="-2.3" step="0.1" value="-3.5"><span class="val" id="vXa"></span>
     </div>
     <div class="res" id="res1"></div>
   </div>
-  <p class="q">1) Sans Δ (montage ①), quel diaphragme est le DO ?</p>
+  <p class="q">1) Sans Δ (exemple 1), quel diaphragme est le DO ?</p>
   <button class="brep" data-open="r11">Afficher la réponse</button>
   <div class="rep" id="r11">C'est L<sub>1</sub> : le faisceau le plus ouvert issu de A s'appuie sur les bords de L<sub>1</sub>, et il passe encore dans L<sub>2</sub>. Donc DO ≡ PE ≡ L<sub>1</sub>.</div>
-  <p class="q">2) Avec Δ placé à 1 cm de L<sub>1</sub> et de rayon 1 cm (montage ②), qui est le DO ?</p>
+  <p class="q">2) Avec Δ placé à 1 cm de L<sub>1</sub> et de rayon 1 cm (exemple 2), qui est le DO ?</p>
   <button class="brep" data-open="r12">Afficher la réponse</button>
   <div class="rep" id="r12">C'est Δ : depuis A', Δ est vu sous le plus petit angle. Le faisceau utile s'appuie sur ses bords. DO ≡ Δ, qui est aussi la pupille intermédiaire.</div>
   <p class="q">3) Le DO est-il toujours le plus petit diaphragme ?</p>
@@ -86,12 +87,12 @@
 
 <!-- ======================= SIMULATION 2 ======================= -->
 <section class="sim" id="sim2">
-  <h2>Simulation 2 : construire PE et PS</h2>
+  <h2>Construire PE et PS</h2>
   <div class="rappel"><b class="t">Rappel</b>
     Les <b>pupilles</b> sont les conjuguées du DO. La pupille d'entrée PE appartient à l'espace objet, la pupille de sortie PS à l'espace image.
     <div style="margin-top:6px" class="chain">PE <span class="arr"><small>sous-système</small><span class="a">⟶</span><small>avant DO</small></span> DO <span class="arr"><small>sous-système</small><span class="a">⟶</span><small>après DO</small></span> PS</div>
   </div>
-  <p>Montage ② du cours. Avance étape par étape.</p>
+  <p>Exemple 2 du cours. Avance étape par étape.</p>
   <button class="bsim" data-open="box2">Afficher la simulation</button>
   <div class="simbox" id="box2">
     <h3>Simulation</h3>
@@ -100,7 +101,7 @@
     <button class="bnav" id="prev2">Étape précédente</button>
     <button class="bnav" id="next2">Étape suivante</button>
   </div>
-  <p class="q">Quelle est la chaîne des pupilles dans le montage ② ?</p>
+  <p class="q">Quelle est la chaîne des pupilles dans l'exemple 2 ?</p>
   <button class="brep" data-open="r21">Afficher la réponse</button>
   <div class="rep" id="r21"><span class="chain">PE <span class="arr"><small>L<sub>1</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> DO ≡ Δ <span class="arr"><small>L<sub>2</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> PS</span><br>
   PE est virtuelle (2 cm après L<sub>1</sub>, rayon 2 cm) ; PS est réelle (1,25 cm après L<sub>2</sub>, rayon 0,25 cm).</div>
@@ -108,7 +109,7 @@
 
 <!-- ======================= SIMULATION 3 ======================= -->
 <section class="sim" id="sim3">
-  <h2>Simulation 3 : la méthode des angles</h2>
+  <h2>La méthode des angles</h2>
   <div class="rappel"><b class="t">Rappel</b>
     On place l'image intermédiaire A<sub>i</sub> (A <span class="arr"><small>L<sub>1</sub></small><span class="a">⟶</span><small>&nbsp;</small></span> A<sub>i</sub>).
     Depuis A<sub>i</sub>, on regarde les bords des diaphragmes : <b>le DO est vu sous le plus petit angle</b>.<br>
@@ -151,6 +152,8 @@ document.querySelectorAll('[data-open]').forEach(b => {
 function openFromHash() {
   const h = location.hash.replace('#', '');
   const n = { sim1: 'box1', sim2: 'box2', sim3: 'box3' }[h];
+  document.querySelectorAll('section.sim').forEach(s => { s.style.display = (!n || s.id === h) ? '' : 'none'; });
+  document.getElementById('toutes').style.display = n ? '' : 'none';
   if (n) {
     const box = document.getElementById(n);
     if (!box.classList.contains('open')) document.querySelector(`[data-open="${n}"]`).click();
@@ -205,7 +208,6 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   function draw() {
     const xd = +sXd.value, rd = +sRd.value, xa = +sXa.value, withD = cb.checked;
     vXd.textContent = fmt(xd) + ' cm'; vRd.textContent = fmt(rd) + ' cm'; vXa.textContent = fmt(xa) + ' cm';
-    sXd.disabled = sRd.disabled = !withD;
     svg.innerHTML = ''; defs(svg);
     // hauteur d'un rayon de pente u issu de A, à l'abscisse x (lentilles minces)
     function hAt(u, x) {
@@ -259,6 +261,7 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
     tick(svg, v, xa, 'A', true);
     res1.innerHTML = `Le DO est <b>${best.n}</b>.<br>${tPE}<br>${tPS}`;
   }
+  [sXd, sRd].forEach(e => e.addEventListener('input', () => { cb.checked = true; }));
   [cb, ...ids.map(i => document.getElementById(i))].forEach(e => e.addEventListener('input', draw));
   draw();
 })();
@@ -269,7 +272,7 @@ const fmt = x => (Math.round(x * 100) / 100).toString().replace('.', ',');
   const v = view(-5, 12, 165, 44);
   const xa = -3.5, xA1 = 14 / 3, x2 = 6, xA2 = 10, h1 = xA1 / (xA1 - 1);
   const steps = [
-    'Le montage ② : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
+    'L\'exemple 2 : deux lentilles L₁ et L₂ et le diaphragme Δ, placé à 1 cm de L₁ (rayon 1 cm). On cherche le DO, puis PE et PS.',
     'Étape 1 : on construit A\', l\'image de A par L₁ (calcul : A\' est à 4,67 cm après L₁). C\'est l\'image intermédiaire.',
     'Étape 2 : depuis A\', on regarde les bords des trois diaphragmes. Δ est vu sous le plus petit angle : <b>Δ est le DO</b>.',
     'Étape 3 : le faisceau utile intermédiaire s\'appuie sur les bords de Δ et passe par A\'. On le prolonge jusqu\'à L₁.',
